@@ -1,0 +1,135 @@
+EVA1_2_CREATE_DATABASE
+
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 10
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > create database prueba_tbd;
+Query OK, 1 row affected (0.0072 sec)
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| prueba_tbd         |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+7 rows in set (0.0016 sec)
+ MySQL  localhost:3306 ssl  SQL > use prueba_tbd;
+Default schema set to `prueba_tbd`.
+Fetching global names, object names from `prueba_tbd` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  prueba_tbd  SQL > show tables;
+Empty set (0.0033 sec)
+ MySQL  localhost:3306 ssl  prueba_tbd  SQL > drop database prueba_tbd;
+Query OK, 0 rows affected (0.0180 sec)
+ MySQL  localhost:3306 ssl  prueba_tbd  SQL > \disconnect
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 11
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > show character set;
++----------+---------------------------------+---------------------+--------+
+| Charset  | Description                     | Default collation   | Maxlen |
++----------+---------------------------------+---------------------+--------+
+| armscii8 | ARMSCII-8 Armenian              | armscii8_general_ci |      1 |
+| ascii    | US ASCII                        | ascii_general_ci    |      1 |
+| big5     | Big5 Traditional Chinese        | big5_chinese_ci     |      2 |
+| binary   | Binary pseudo charset           | binary              |      1 |
+| cp1250   | Windows Central European        | cp1250_general_ci   |      1 |
+| cp1251   | Windows Cyrillic                | cp1251_general_ci   |      1 |
+| cp1256   | Windows Arabic                  | cp1256_general_ci   |      1 |
+| cp1257   | Windows Baltic                  | cp1257_general_ci   |      1 |
+| cp850    | DOS West European               | cp850_general_ci    |      1 |
+| cp852    | DOS Central European            | cp852_general_ci    |      1 |
+| cp866    | DOS Russian                     | cp866_general_ci    |      1 |
+| cp932    | SJIS for Windows Japanese       | cp932_japanese_ci   |      2 |
+| dec8     | DEC West European               | dec8_swedish_ci     |      1 |
+| eucjpms  | UJIS for Windows Japanese       | eucjpms_japanese_ci |      3 |
+| euckr    | EUC-KR Korean                   | euckr_korean_ci     |      2 |
+| gb18030  | China National Standard GB18030 | gb18030_chinese_ci  |      4 |
+| gb2312   | GB2312 Simplified Chinese       | gb2312_chinese_ci   |      2 |
+| gbk      | GBK Simplified Chinese          | gbk_chinese_ci      |      2 |
+| geostd8  | GEOSTD8 Georgian                | geostd8_general_ci  |      1 |
+| greek    | ISO 8859-7 Greek                | greek_general_ci    |      1 |
+| hebrew   | ISO 8859-8 Hebrew               | hebrew_general_ci   |      1 |
+| hp8      | HP West European                | hp8_english_ci      |      1 |
+| keybcs2  | DOS Kamenicky Czech-Slovak      | keybcs2_general_ci  |      1 |
+| koi8r    | KOI8-R Relcom Russian           | koi8r_general_ci    |      1 |
+| koi8u    | KOI8-U Ukrainian                | koi8u_general_ci    |      1 |
+| latin1   | cp1252 West European            | latin1_swedish_ci   |      1 |
+| latin2   | ISO 8859-2 Central European     | latin2_general_ci   |      1 |
+| latin5   | ISO 8859-9 Turkish              | latin5_turkish_ci   |      1 |
+| latin7   | ISO 8859-13 Baltic              | latin7_general_ci   |      1 |
+| macce    | Mac Central European            | macce_general_ci    |      1 |
+| macroman | Mac West European               | macroman_general_ci |      1 |
+| sjis     | Shift-JIS Japanese              | sjis_japanese_ci    |      2 |
+| swe7     | 7bit Swedish                    | swe7_swedish_ci     |      1 |
+| tis620   | TIS620 Thai                     | tis620_thai_ci      |      1 |
+| ucs2     | UCS-2 Unicode                   | ucs2_general_ci     |      2 |
+| ujis     | EUC-JP Japanese                 | ujis_japanese_ci    |      3 |
+| utf16    | UTF-16 Unicode                  | utf16_general_ci    |      4 |
+| utf16le  | UTF-16LE Unicode                | utf16le_general_ci  |      4 |
+| utf32    | UTF-32 Unicode                  | utf32_general_ci    |      4 |
+| utf8mb3  | UTF-8 Unicode                   | utf8mb3_general_ci  |      3 |
+| utf8mb4  | UTF-8 Unicode                   | utf8mb4_0900_ai_ci  |      4 |
++----------+---------------------------------+---------------------+--------+
+41 rows in set (0.0012 sec)
+ MySQL  localhost:3306 ssl  SQL > show collation where charset='utf16';
++----------------------+---------+-----+---------+----------+---------+---------------+
+| Collation            | Charset | Id  | Default | Compiled | Sortlen | Pad_attribute |
++----------------------+---------+-----+---------+----------+---------+---------------+
+| utf16_bin            | utf16   |  55 |         | Yes      |       1 | PAD SPACE     |
+| utf16_croatian_ci    | utf16   | 122 |         | Yes      |       8 | PAD SPACE     |
+| utf16_czech_ci       | utf16   | 111 |         | Yes      |       8 | PAD SPACE     |
+| utf16_danish_ci      | utf16   | 112 |         | Yes      |       8 | PAD SPACE     |
+| utf16_esperanto_ci   | utf16   | 118 |         | Yes      |       8 | PAD SPACE     |
+| utf16_estonian_ci    | utf16   | 107 |         | Yes      |       8 | PAD SPACE     |
+| utf16_general_ci     | utf16   |  54 | Yes     | Yes      |       1 | PAD SPACE     |
+| utf16_german2_ci     | utf16   | 121 |         | Yes      |       8 | PAD SPACE     |
+| utf16_hungarian_ci   | utf16   | 119 |         | Yes      |       8 | PAD SPACE     |
+| utf16_icelandic_ci   | utf16   | 102 |         | Yes      |       8 | PAD SPACE     |
+| utf16_latvian_ci     | utf16   | 103 |         | Yes      |       8 | PAD SPACE     |
+| utf16_lithuanian_ci  | utf16   | 113 |         | Yes      |       8 | PAD SPACE     |
+| utf16_persian_ci     | utf16   | 117 |         | Yes      |       8 | PAD SPACE     |
+| utf16_polish_ci      | utf16   | 106 |         | Yes      |       8 | PAD SPACE     |
+| utf16_romanian_ci    | utf16   | 104 |         | Yes      |       8 | PAD SPACE     |
+| utf16_roman_ci       | utf16   | 116 |         | Yes      |       8 | PAD SPACE     |
+| utf16_sinhala_ci     | utf16   | 120 |         | Yes      |       8 | PAD SPACE     |
+| utf16_slovak_ci      | utf16   | 114 |         | Yes      |       8 | PAD SPACE     |
+| utf16_slovenian_ci   | utf16   | 105 |         | Yes      |       8 | PAD SPACE     |
+| utf16_spanish2_ci    | utf16   | 115 |         | Yes      |       8 | PAD SPACE     |
+| utf16_spanish_ci     | utf16   | 108 |         | Yes      |       8 | PAD SPACE     |
+| utf16_swedish_ci     | utf16   | 109 |         | Yes      |       8 | PAD SPACE     |
+| utf16_turkish_ci     | utf16   | 110 |         | Yes      |       8 | PAD SPACE     |
+| utf16_unicode_520_ci | utf16   | 123 |         | Yes      |       8 | PAD SPACE     |
+| utf16_unicode_ci     | utf16   | 101 |         | Yes      |       8 | PAD SPACE     |
+| utf16_vietnamese_ci  | utf16   | 124 |         | Yes      |       8 | PAD SPACE     |
++----------------------+---------+-----+---------+----------+---------+---------------+
+26 rows in set (0.0018 sec)
+ MySQL  localhost:3306 ssl  SQL > create database prueba;
+Query OK, 1 row affected (0.0071 sec)
+ MySQL  localhost:3306 ssl  SQL > show create database prueba;
++----------+----------------------------------------------------------------------------------------------------------------------------------+
+| Database | Create Database                                                                                                                  |
++----------+----------------------------------------------------------------------------------------------------------------------------------+
+| prueba   | CREATE DATABASE `prueba` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */ |
++----------+----------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0008 sec)
+ MySQL  localhost:3306 ssl  SQL >
