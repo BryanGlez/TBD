@@ -1,0 +1,49 @@
+EVA1_4_CREATE_TABLE
+
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 9
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > create table STUDENT(
+                               -> student_name varchar(50) not null,
+                               -> student_ssn int(9) not null,
+                               -> student_hf int(8),
+                               -> address varchar(100) not null,
+                               -> of_phone int(8),
+                               -> age int(2) not null,
+                               -> gpa decimal(5,2) not null);
+ERROR: 1046 (3D000): No database selected
+ MySQL  localhost:3306 ssl  SQL > \use prueba
+Default schema set to `prueba`.
+Fetching global names, object names from `prueba` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  prueba  SQL > create table STUDENT( student_name varchar(50) not null, student_ssn int(9) not null, student_hf int(8), address varchar(100) not null, of_phone int(8), age int(2) not null, gpa decimal(5,2) not null);
+Query OK, 0 rows affected, 4 warnings (0.0277 sec)
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > desc STUDENT;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| student_name | varchar(50)  | NO   |     | NULL    |       |
+| student_ssn  | int          | NO   |     | NULL    |       |
+| student_hf   | int          | YES  |     | NULL    |       |
+| address      | varchar(100) | NO   |     | NULL    |       |
+| of_phone     | int          | YES  |     | NULL    |       |
+| age          | int          | NO   |     | NULL    |       |
+| gpa          | decimal(5,2) | NO   |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+7 rows in set (0.0034 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL >
