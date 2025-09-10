@@ -1,0 +1,142 @@
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > \use prueba
+Default schema set to `prueba`.
+Fetching global names, object names from `prueba` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  prueba  SQL > show tables;
++------------------+
+| Tables_in_prueba |
++------------------+
+| cliente          |
+| cliente_datos    |
+| customer         |
+| docente          |
+| ficha            |
+| persona          |
+| playeras         |
+| student          |
++------------------+
+8 rows in set (0.0023 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table roll
+                                       -> roll_no int(^C
+ MySQL  localhost:3306 ssl  prueba  SQL > create table curso(
+                                       -> Roll_no int not null auto_increment key,
+                                       -> Name varchar(50) not null,
+                                       -> JAVA int(1) not null,
+                                       -> C++ int(1) not null,
+                                       -> C int(1) not null,
+                                       -> ANDROID int(1) not null,
+                                       -> PHP int(1) not null,
+                                       -> Others int(1) not null);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '++ int(1) not null,
+C int(1) not null,
+ANDROID int(1) not null,
+PHP int(1) not n' at line 5
+ MySQL  localhost:3306 ssl  prueba  SQL > create table curso(
+                                       -> roll_no int not null auto_increment key,
+                                       -> name varchar(50) not null);
+Query OK, 0 rows affected (0.0272 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > desc curso;
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| roll_no | int         | NO   | PRI | NULL    | auto_increment |
+| name    | varchar(50) | NO   |     | NULL    |                |
++---------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0030 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > alter table curso
+                                       -> add column ^C
+ MySQL  localhost:3306 ssl  prueba  SQL > drop table curso;
+Query OK, 0 rows affected (0.0210 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table curso(
+                                       -> roll_no int(3) not null,
+                                       -> name varchar(50) not null,
+                                       -> subject varchar(20) not null);
+Query OK, 0 rows affected, 1 warning (0.0244 sec)
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > desc curso;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| roll_no | int         | NO   |     | NULL    |       |
+| name    | varchar(50) | NO   |     | NULL    |       |
+| subject | varchar(20) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.0030 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > show tables;
++------------------+
+| Tables_in_prueba |
++------------------+
+| cliente          |
+| cliente_datos    |
+| curso            |
+| customer         |
+| docente          |
+| ficha            |
+| persona          |
+| playeras         |
+| student          |
++------------------+
+9 rows in set (0.0027 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table students(
+                                       -> IDSt int not null auto_increment key,
+                                       -> lastname varchar(50) not null,
+                                       -> IDProf int(5) not null,
+                                       -> prof varchar(50) not null,
+                                       -> grade int(3) not null);
+Query OK, 0 rows affected, 2 warnings (0.0252 sec)
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > desc students;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| IDSt     | int         | NO   | PRI | NULL    | auto_increment |
+| lastname | varchar(50) | NO   |     | NULL    |                |
+| IDProf   | int         | NO   |     | NULL    |                |
+| prof     | varchar(50) | NO   |     | NULL    |                |
+| grade    | int         | NO   |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+5 rows in set (0.0028 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > insert into students
+                                       -> values ("Mueller","3","Schmid","5"), ("Meier","2","Borner","4"), ("Tobler","1","Bernasconi","6");
+ERROR: 1136 (21S01): Column count doesn't match value count at row 1
+ MySQL  localhost:3306 ssl  prueba  SQL > desc students;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| IDSt     | int         | NO   | PRI | NULL    | auto_increment |
+| lastname | varchar(50) | NO   |     | NULL    |                |
+| IDProf   | int         | NO   |     | NULL    |                |
+| prof     | varchar(50) | NO   |     | NULL    |                |
+| grade    | int         | NO   |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+5 rows in set (0.0024 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > drop students;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'students' at line 1
+ MySQL  localhost:3306 ssl  prueba  SQL > drop table students;
+Query OK, 0 rows affected (0.0232 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table students(
+                                       -> id_st int not null auto_increment key,
+                                       -> last_name varchar(50) not null,
+                                       -> grade int(2) not null);
+Query OK, 0 rows affected, 1 warning (0.0251 sec)
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > create table profesor(
+                                       -> id_prof int not null auto_increment key,
+                                       -> name_prof varchar(50) not null);
+Query OK, 0 rows affected (0.0231 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL >
