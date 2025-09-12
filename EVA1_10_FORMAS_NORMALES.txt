@@ -1,0 +1,154 @@
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > use prueba;
+Default schema set to `prueba`.
+Fetching global names, object names from `prueba` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  prueba  SQL > show tables;
++------------------+
+| Tables_in_prueba |
++------------------+
+| cliente          |
+| cliente_datos    |
+| curso            |
+| customer         |
+| docente          |
+| ficha            |
+| persona          |
+| playeras         |
+| profesor         |
+| student          |
+| students         |
++------------------+
+11 rows in set (0.0024 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > desc students;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| id_st     | int         | NO   | PRI | NULL    | auto_increment |
+| last_name | varchar(50) | NO   |     | NULL    |                |
+| grade     | int         | NO   |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+3 rows in set (0.0026 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > desc profesor;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| id_prof   | int         | NO   | PRI | NULL    | auto_increment |
+| name_prof | varchar(50) | NO   |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0019 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table orders(
+                                       -> order_id int(10) not null,
+                                       -> order_date date not null);
+Query OK, 0 rows affected, 1 warning (0.0197 sec)
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > desc orders;
++------------+------+------+-----+---------+-------+
+| Field      | Type | Null | Key | Default | Extra |
++------------+------+------+-----+---------+-------+
+| order_id   | int  | NO   |     | NULL    |       |
+| order_date | date | NO   |     | NULL    |       |
++------------+------+------+-----+---------+-------+
+2 rows in set (0.0024 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table customers(
+                                       -> ^C
+ MySQL  localhost:3306 ssl  prueba  SQL > alter table orders
+                                       -> add column cust_id int(10) not null;
+Query OK, 0 rows affected, 1 warning (0.0339 sec)
+
+Records: 0  Duplicates: 0  Warnings: 1
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > desc customers;
+ERROR: 1146 (42S02): Table 'prueba.customers' doesn't exist
+ MySQL  localhost:3306 ssl  prueba  SQL > desc orders;
++------------+------+------+-----+---------+-------+
+| Field      | Type | Null | Key | Default | Extra |
++------------+------+------+-----+---------+-------+
+| order_id   | int  | NO   |     | NULL    |       |
+| order_date | date | NO   |     | NULL    |       |
+| cust_id    | int  | NO   |     | NULL    |       |
++------------+------+------+-----+---------+-------+
+3 rows in set (0.0020 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table customers(
+                                       -> ^C
+ MySQL  localhost:3306 ssl  prueba  SQL > alter table orders
+                                       -> modify cust_id int(10) not null key;
+Query OK, 0 rows affected, 1 warning (0.0322 sec)
+
+Records: 0  Duplicates: 0  Warnings: 1
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > desc orders;
++------------+------+------+-----+---------+-------+
+| Field      | Type | Null | Key | Default | Extra |
++------------+------+------+-----+---------+-------+
+| order_id   | int  | NO   |     | NULL    |       |
+| order_date | date | NO   |     | NULL    |       |
+| cust_id    | int  | NO   | PRI | NULL    |       |
++------------+------+------+-----+---------+-------+
+3 rows in set (0.0022 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table customers(
+                                       -> cust_id int(10) not null key,
+                                       -> cust_name varchar(50) not null,
+                                       -> cust_address varchar(50) not null);
+Query OK, 0 rows affected, 1 warning (0.0227 sec)
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > desc customers;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| cust_id      | int         | NO   | PRI | NULL    |       |
+| cust_name    | varchar(50) | NO   |     | NULL    |       |
+| cust_address | varchar(50) | NO   |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.0027 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > insert into orders
+                                       -> values("1006","2004-10-24","2"),("1007","2004-10-25","6"),("1008","2004-11-01","2");
+ERROR: 1062 (23000): Duplicate entry '2' for key 'orders.PRIMARY'
+ MySQL  localhost:3306 ssl  prueba  SQL > select * from orders;
+Empty set (0.0008 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > alter table orders
+                                       -> modify cust_id int(10) not null;
+Query OK, 0 rows affected, 1 warning (0.0061 sec)
+
+Records: 0  Duplicates: 0  Warnings: 1
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > desc orders;
++------------+------+------+-----+---------+-------+
+| Field      | Type | Null | Key | Default | Extra |
++------------+------+------+-----+---------+-------+
+| order_id   | int  | NO   |     | NULL    |       |
+| order_date | date | NO   |     | NULL    |       |
+| cust_id    | int  | NO   | PRI | NULL    |       |
++------------+------+------+-----+---------+-------+
+3 rows in set (0.0016 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > drop table orders;
+Query OK, 0 rows affected (0.0153 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table orders( order_id int(10) not null key, order_date date not null,cust_id int(10) not null);
+Query OK, 0 rows affected, 2 warnings (0.0182 sec)
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+Warning (code 1681): Integer display width is deprecated and will be removed in a future release.
+ MySQL  localhost:3306 ssl  prueba  SQL > desc orders;
++------------+------+------+-----+---------+-------+
+| Field      | Type | Null | Key | Default | Extra |
++------------+------+------+-----+---------+-------+
+| order_id   | int  | NO   | PRI | NULL    |       |
+| order_date | date | NO   |     | NULL    |       |
+| cust_id    | int  | NO   |     | NULL    |       |
++------------+------+------+-----+---------+-------+
+3 rows in set (0.0026 sec)
+ MySQL  localhost:3306 ssl  prueba  SQL > create table employee(
+                                       -> employee_id varchar(10) not null^C
+ MySQL  localhost:3306 ssl  prueba  SQL >
