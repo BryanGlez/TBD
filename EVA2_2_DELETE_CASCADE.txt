@@ -1,0 +1,263 @@
+Microsoft Windows [Versión 10.0.22621.4317]
+(c) Microsoft Corporation. Todos los derechos reservados.
+
+C:\Users\bryan>cd C:\Program Files\MySQL\MySQL Workbench 8.0
+
+C:\Program Files\MySQL\MySQL Workbench 8.0>mysql --local-infile=1 -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 35
+Server version: 8.0.43 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use prueba;
+Database changed
+mysql> create table estudiante(
+    -> idestudiante int not null auto_increment key,
+    -> nombre varchar(50) not null,
+    -> fecha_nac date not null);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table asignatura(
+    -> idasignatura int not null auto_increment key,
+    -> nombre varchar(50) not null,
+    -> creditos int not null);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table horario(
+    -> idhorario int not null auto_increment key,
+    -> idestudiante int not null,
+    -> foreign key (idestudiante)
+    -> references estudiante(idestudiante)
+    -> on delete restrict
+    -> on update cascade);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into estudiante(nombre, fecha_nac)
+    -> values("Bryan Gonzalez", "2001-07-18"),
+    -> ("Michelle Tellez", "2003-10-02"),
+    -> ("Juan Mota", "2004-08-10");
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc horario;
++--------------+------+------+-----+---------+----------------+
+| Field        | Type | Null | Key | Default | Extra          |
++--------------+------+------+-----+---------+----------------+
+| idhorario    | int  | NO   | PRI | NULL    | auto_increment |
+| idestudiante | int  | NO   | MUL | NULL    |                |
++--------------+------+------+-----+---------+----------------+
+2 rows in set (0.01 sec)
+
+mysql> insert into horario(idestudiante)
+    -> values(1),(2),(3);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from horario;
++-----------+--------------+
+| idhorario | idestudiante |
++-----------+--------------+
+|         1 |            1 |
+|         2 |            2 |
+|         3 |            3 |
++-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> delete * from estudiante
+    -> where idestudiante^C
+mysql> delete from estudiante
+    -> where idestudiante = 1;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`prueba`.`horario`, CONSTRAINT `horario_ibfk_1` FOREIGN KEY (`idestudiante`) REFERENCES `estudiante` (`idestudiante`) ON DELETE RESTRICT ON UPDATE CASCADE)
+mysql> update estudiante
+    -> set idestudiante = 10
+    -> where idestudiante = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from estudiante;
++--------------+-----------------+------------+
+| idestudiante | nombre          | fecha_nac  |
++--------------+-----------------+------------+
+|            2 | Michelle Tellez | 2003-10-02 |
+|            3 | Juan Mota       | 2004-08-10 |
+|           10 | Bryan Gonzalez  | 2001-07-18 |
++--------------+-----------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from estudiante;
++--------------+-----------------+------------+
+| idestudiante | nombre          | fecha_nac  |
++--------------+-----------------+------------+
+|            2 | Michelle Tellez | 2003-10-02 |
+|            3 | Juan Mota       | 2004-08-10 |
+|           10 | Bryan Gonzalez  | 2001-07-18 |
++--------------+-----------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from horario;
++-----------+--------------+
+| idhorario | idestudiante |
++-----------+--------------+
+|         2 |            2 |
+|         3 |            3 |
+|         1 |           10 |
++-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> show tables;
++------------------+
+| Tables_in_prueba |
++------------------+
+| asignatura       |
+| clientes         |
+| empleados        |
+| empleados_raw    |
+| estudiante       |
+| horario          |
+| producto         |
+| venta            |
+| ventadetalle     |
++------------------+
+9 rows in set (0.00 sec)
+
+mysql> create table detallehorario(
+    -> iddethorario int not null auto_increment key,
+    -> idasignatura int not null,
+    -> idhorario int not null,
+    -> foreign key (idasignatura)
+    -> references asignatura(idasignatura),
+    -> foreign key (idhorario)
+    -> references horario(idhorario)
+    -> on delete restrict
+    -> on update cascade);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> drop table detallehorario;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table detallehorario(
+    ->     -> iddethorario int not null auto_increment key,
+    ->     -> idasignatura int not null,
+    ->     -> idhorario int not null,
+    ->     -> foreign key (idasignatura)
+    ->     -> references asignatura(idasignatura),
+    ->     -> foreign key (idhorario)
+    ->     -> references horario(idhorario)
+    ->     -> on delete restrict
+    ->     -> on update cascade);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> iddethorario int not null auto_increment key,
+    -> idasignatura int not nul' at line 2
+mysql> create table detallehorario(
+    -> iddethorario int not null auto_increment key,
+    -> idasignatura int not null,
+    -> idhorario int not null,
+    -> foreign key (idasignatura)
+    -> references asignatura(idasignatura)
+    -> on delete restrict
+    -> on update cascade
+    -> foreign key (idhorario)
+    -> references horario(idhorario)
+    -> on delete restrict
+    -> on update cascade);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'foreign key (idhorario)
+references horario(idhorario)
+on delete restrict
+on upda' at line 9
+mysql> create table detallehorario(
+    -> iddethorario int not null auto_increment key,
+    -> idhorario int not null,
+    -> foreign key (idhorario)
+    -> references horario(idhorario)
+    -> on delet restrict
+    -> ^C
+mysql> create table detallehorario(
+    -> iddethorario int not null auto_increment key,
+    -> idhorario int not null,
+    -> foreign key (idhorario)
+    -> references horario(idhorario)
+    -> on delete restrict
+    -> on update cascade
+    -> idasignatura int not null,
+    -> foreign key (idasignatura)
+    -> references asignatura(idasignatura)
+    -> on delete restrict
+    -> on update cascade);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'idasignatura int not null,
+foreign key (idasignatura)
+references asignatura(idas' at line 8
+mysql> show tables;
++------------------+
+| Tables_in_prueba |
++------------------+
+| asignatura       |
+| clientes         |
+| empleados        |
+| empleados_raw    |
+| estudiante       |
+| horario          |
+| producto         |
+| venta            |
+| ventadetalle     |
++------------------+
+9 rows in set (0.00 sec)
+
+mysql> desc asignatura;
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| idasignatura | int         | NO   | PRI | NULL    | auto_increment |
+| nombre       | varchar(50) | NO   |     | NULL    |                |
+| creditos     | int         | NO   |     | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> create table detallehorario(
+    -> iddethorario int not null auto_increment key,
+    -> idhorario int not null,
+    -> foreign key (idhorario)
+    -> references horario(idhorario)
+    -> on delete restrict
+    -> on update cascade,
+    -> idasignatura int not null,
+    -> foreign key (idasignatura)
+    -> references asignatura(idasignatura)
+    -> on delete restrict
+    -> on update cascade);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show create table detallehorario;
++----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table          | Create Table       |
++----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| detallehorario | CREATE TABLE `detallehorario` (
+  `iddethorario` int NOT NULL AUTO_INCREMENT,
+  `idhorario` int NOT NULL,
+  `idasignatura` int NOT NULL,
+  PRIMARY KEY (`iddethorario`),
+  KEY `idhorario` (`idhorario`),
+  KEY `idasignatura` (`idasignatura`),
+  CONSTRAINT `detallehorario_ibfk_1` FOREIGN KEY (`idhorario`) REFERENCES `horario` (`idhorario`) ON DELETE RESTRICT ONUPDATE CASCADE,
+  CONSTRAINT `detallehorario_ibfk_2` FOREIGN KEY (`idasignatura`) REFERENCES `asignatura` (`idasignatura`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> desc detallehorario;
++--------------+------+------+-----+---------+----------------+
+| Field        | Type | Null | Key | Default | Extra          |
++--------------+------+------+-----+---------+----------------+
+| iddethorario | int  | NO   | PRI | NULL    | auto_increment |
+| idhorario    | int  | NO   | MUL | NULL    |                |
+| idasignatura | int  | NO   | MUL | NULL    |                |
++--------------+------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql>

@@ -1,0 +1,324 @@
+Microsoft Windows [Versión 10.0.22621.4317]
+(c) Microsoft Corporation. Todos los derechos reservados.
+
+C:\Users\bryan>cd C:\Program Files\MySQL\MySQL Workbench 8.0
+
+C:\Program Files\MySQL\MySQL Workbench 8.0>mysql --local-infile=1 -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 34
+Server version: 8.0.43 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases
+    -> ^C
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| prueba             |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use prueba;
+Database changed
+mysql> create table clientes(
+    -> id int not null auto_increment key,
+    -> nombre varchar(50) not null,
+    -> rfc varchar(13) not null);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc clientes;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int         | NO   | PRI | NULL    | auto_increment |
+| nombre | varchar(50) | NO   |     | NULL    |                |
+| rfc    | varchar(13) | NO   |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> insert into clientes
+    -> values("Pedro","1231231231233"),("Pepe","2342342342344"),("Aldo","5675675675677");
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into clientes
+    -> values("1","Pedro","1231231231233"),("2","Pepe","2342342342344"),("3","Aldo","5675675675677");
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from cliente;
+ERROR 1146 (42S02): Table 'prueba.cliente' doesn't exist
+mysql> select * from clientes;
++----+--------+---------------+
+| id | nombre | rfc           |
++----+--------+---------------+
+|  1 | Pedro  | 1231231231233 |
+|  2 | Pepe   | 2342342342344 |
+|  3 | Aldo   | 5675675675677 |
++----+--------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> create table venta(
+    -> idventa int not null auto_increment key,
+    -> fecha date not null,
+    -> id int not null,
+    -> foreign key (id)
+    -> references clientes(id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show create table venta;
++-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table | Create Table                                                                                                                                                         |
++-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| venta | CREATE TABLE `venta` (
+  `idventa` int NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `id` int NOT NULL,
+  PRIMARY KEY (`idventa`),
+  KEY `id` (`id`),
+  CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`id`) REFERENCES `clientes` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> insert into venta(fecha, id)
+    -> value("2025-09-17",5);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`prueba`.`venta`, CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`id`) REFERENCES `clientes` (`id`))
+mysql> insert into venta(fecha, id)
+    -> value("2025-09-17",1);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into venta(fecha, id)
+    -> value("2025-09-18",2);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into venta(fecha, id)
+    -> value("2025-09-19",3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from clientes;
++----+--------+---------------+
+| id | nombre | rfc           |
++----+--------+---------------+
+|  1 | Pedro  | 1231231231233 |
+|  2 | Pepe   | 2342342342344 |
+|  3 | Aldo   | 5675675675677 |
++----+--------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from venta;
++---------+------------+----+
+| idventa | fecha      | id |
++---------+------------+----+
+|       2 | 2025-09-17 |  1 |
+|       3 | 2025-09-18 |  2 |
+|       4 | 2025-09-19 |  3 |
++---------+------------+----+
+3 rows in set (0.00 sec)
+
+mysql> insert into venta(fecha, id)
+    -> value("2025-09-17",1);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from venta;
++---------+------------+----+
+| idventa | fecha      | id |
++---------+------------+----+
+|       2 | 2025-09-17 |  1 |
+|       3 | 2025-09-18 |  2 |
+|       4 | 2025-09-19 |  3 |
+|       5 | 2025-09-17 |  1 |
++---------+------------+----+
+4 rows in set (0.00 sec)
+
+mysql> delet from venta
+    -> where id = 1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delet from venta
+where id = 1' at line 1
+mysql> delete from venta
+    -> where id = 1;
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> delete from cliente
+    -> where id = 1;
+ERROR 1146 (42S02): Table 'prueba.cliente' doesn't exist
+mysql> delete from clientes
+    -> where id = 1;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> alter table venta
+    -> drop constraint venta_ibfk_1;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show create table venta;
++-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table | Create Table                                                                                             |
++-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| venta | CREATE TABLE `venta` (
+  `idventa` int NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `id` int NOT NULL,
+  PRIMARY KEY (`idventa`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> alter table venta
+    -> add constraint foreign key(id)
+    -> references clientes(id);
+Query OK, 2 rows affected (0.05 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> show create table venta;
++-------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table | Create Table              |
++-------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| venta | CREATE TABLE `venta` (
+  `idventa` int NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `id` int NOT NULL,
+  PRIMARY KEY (`idventa`),
+  KEY `id` (`id`),
+  CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`id`) REFERENCES `clientes` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> create table producto(
+    -> idproducto int not null auto_increment key,
+    -> nombre varchar(50) not null,
+    -> precio decimal(8,2) not null);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into producto(nombre, precio)
+    -> values("Celular",1500.00),("TV",16999.99),("Laptop",20000.99);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from producto;
++------------+---------+----------+
+| idproducto | nombre  | precio   |
++------------+---------+----------+
+|          1 | Celular |  1500.00 |
+|          2 | TV      | 16999.99 |
+|          3 | Laptop  | 20000.99 |
++------------+---------+----------+
+3 rows in set (0.00 sec)
+
+mysql> create table ventadetalle(
+    -> idventadetalle int not null auto_increment key,
+    -> idventa int not null,
+    -> idproducto int not null,
+    -> cantidad int not null,
+    -> foreign key(idventa) references venta(idventa),
+    -> foreign key(idproducto) references producto(idproducto));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show create table ventadetalle;
++--------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table        | Create Table                                                                |
++--------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ventadetalle | CREATE TABLE `ventadetalle` (
+  `idventadetalle` int NOT NULL AUTO_INCREMENT,
+  `idventa` int NOT NULL,
+  `idproducto` int NOT NULL,
+  `cantidad` int NOT NULL,
+  PRIMARY KEY (`idventadetalle`),
+  KEY `idventa` (`idventa`),
+  KEY `idproducto` (`idproducto`),
+  CONSTRAINT `ventadetalle_ibfk_1` FOREIGN KEY (`idventa`) REFERENCES `venta` (`idventa`),
+  CONSTRAINT `ventadetalle_ibfk_2` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`idproducto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++--------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from venta;
++---------+------------+----+
+| idventa | fecha      | id |
++---------+------------+----+
+|       3 | 2025-09-18 |  2 |
+|       4 | 2025-09-19 |  3 |
++---------+------------+----+
+2 rows in set (0.00 sec)
+
+mysql> select * from producto;
++------------+---------+----------+
+| idproducto | nombre  | precio   |
++------------+---------+----------+
+|          1 | Celular |  1500.00 |
+|          2 | TV      | 16999.99 |
+|          3 | Laptop  | 20000.99 |
++------------+---------+----------+
+3 rows in set (0.00 sec)
+
+mysql> insert into venta(fecha, id)
+    -> value("2025-09-17",1);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`prueba`.`venta`, CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`id`) REFERENCES `clientes` (`id`))
+mysql> insert into ventadetalle(idventa, idproducto, cantidad)
+    -> values(3,1,1),(4,3,2);
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from ventadetalle;
++----------------+---------+------------+----------+
+| idventadetalle | idventa | idproducto | cantidad |
++----------------+---------+------------+----------+
+|              1 |       3 |          1 |        1 |
+|              2 |       4 |          3 |        2 |
++----------------+---------+------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> desc clientes;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int         | NO   | PRI | NULL    | auto_increment |
+| nombre | varchar(50) | NO   |     | NULL    |                |
+| rfc    | varchar(13) | NO   |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from clientes;
++----+--------+---------------+
+| id | nombre | rfc           |
++----+--------+---------------+
+|  2 | Pepe   | 2342342342344 |
+|  3 | Aldo   | 5675675675677 |
++----+--------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> insert into clientes(nombre, rfc)
+    -> value("Bryan",7897897897898);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into clientes(nombre, rfc)
+    -> value("Sonti",7343457523481);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from clientes;
++----+--------+---------------+
+| id | nombre | rfc           |
++----+--------+---------------+
+|  2 | Pepe   | 2342342342344 |
+|  3 | Aldo   | 5675675675677 |
+|  4 | Bryan  | 7897897897898 |
+|  5 | Sonti  | 7343457523481 |
++----+--------+---------------+
+4 rows in set (0.00 sec)
+
+mysql>
