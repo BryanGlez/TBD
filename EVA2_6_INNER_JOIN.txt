@@ -1,0 +1,722 @@
+Microsoft Windows [Versión 10.0.22621.4317]
+(c) Microsoft Corporation. Todos los derechos reservados.
+
+C:\Users\bryan>cd C:\Program Files\MySQL\MySQL Workbench 8.0
+
+C:\Program Files\MySQL\MySQL Workbench 8.0>mysql --local-infile=1 -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.43 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use sakila;
+Database changed
+mysql> show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.01 sec)
+
+mysql> desc payment;
++--------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type              | Null | Key | Default           | Extra                                         |
++--------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| payment_id   | smallint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| customer_id  | smallint unsigned | NO   | MUL | NULL              |                                               |
+| staff_id     | tinyint unsigned  | NO   | MUL | NULL              |                                               |
+| rental_id    | int               | YES  | MUL | NULL              |                                               |
+| amount       | decimal(5,2)      | NO   |     | NULL              |                                               |
+| payment_date | datetime          | NO   |     | NULL              |                                               |
+| last_update  | timestamp         | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.01 sec)
+
+mysql> desc customer;
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| Field       | Type              | Null | Key | Default           | Extra                                         |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| customer_id | smallint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| store_id    | tinyint unsigned  | NO   | MUL | NULL              |                                               |
+| first_name  | varchar(45)       | NO   |     | NULL              |                                               |
+| last_name   | varchar(45)       | NO   | MUL | NULL              |                                               |
+| email       | varchar(50)       | YES  |     | NULL              |                                               |
+| address_id  | smallint unsigned | NO   | MUL | NULL              |                                               |
+| active      | tinyint(1)        | NO   |     | 1                 |                                               |
+| create_date | datetime          | NO   |     | NULL              |                                               |
+| last_update | timestamp         | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+9 rows in set (0.00 sec)
+
+mysql> select b.first_name, b.last_name, a.amount
+    -> from payment a
+    -> inner join customer b
+    -> on a.customer_id = b.customer_id
+    -> order by b.last_name, b.first_name
+    -> limit 100;
++------------+-----------+--------+
+| first_name | last_name | amount |
++------------+-----------+--------+
+| RAFAEL     | ABNEY     |   2.99 |
+| RAFAEL     | ABNEY     |   2.99 |
+| RAFAEL     | ABNEY     |   5.99 |
+| RAFAEL     | ABNEY     |   4.99 |
+| RAFAEL     | ABNEY     |   7.99 |
+| RAFAEL     | ABNEY     |   5.99 |
+| RAFAEL     | ABNEY     |   5.99 |
+| RAFAEL     | ABNEY     |   6.99 |
+| RAFAEL     | ABNEY     |   9.99 |
+| RAFAEL     | ABNEY     |   4.99 |
+| RAFAEL     | ABNEY     |   0.99 |
+| RAFAEL     | ABNEY     |   4.99 |
+| RAFAEL     | ABNEY     |   5.99 |
+| RAFAEL     | ABNEY     |   2.99 |
+| RAFAEL     | ABNEY     |   0.99 |
+| RAFAEL     | ABNEY     |   2.99 |
+| RAFAEL     | ABNEY     |   3.99 |
+| RAFAEL     | ABNEY     |   2.99 |
+| RAFAEL     | ABNEY     |   2.99 |
+| RAFAEL     | ABNEY     |   4.99 |
+| RAFAEL     | ABNEY     |   4.99 |
+| NATHANIEL  | ADAM      |   5.99 |
+| NATHANIEL  | ADAM      |   4.99 |
+| NATHANIEL  | ADAM      |   4.99 |
+| NATHANIEL  | ADAM      |   1.99 |
+| NATHANIEL  | ADAM      |   6.99 |
+| NATHANIEL  | ADAM      |   9.99 |
+| NATHANIEL  | ADAM      |   6.99 |
+| NATHANIEL  | ADAM      |   5.99 |
+| NATHANIEL  | ADAM      |   0.99 |
+| NATHANIEL  | ADAM      |   6.99 |
+| NATHANIEL  | ADAM      |   3.99 |
+| NATHANIEL  | ADAM      |   2.99 |
+| NATHANIEL  | ADAM      |   2.99 |
+| NATHANIEL  | ADAM      |   1.99 |
+| NATHANIEL  | ADAM      |   4.99 |
+| NATHANIEL  | ADAM      |   9.99 |
+| NATHANIEL  | ADAM      |   0.99 |
+| NATHANIEL  | ADAM      |   3.99 |
+| NATHANIEL  | ADAM      |   2.99 |
+| NATHANIEL  | ADAM      |   1.99 |
+| NATHANIEL  | ADAM      |   2.99 |
+| NATHANIEL  | ADAM      |   2.99 |
+| NATHANIEL  | ADAM      |   2.99 |
+| NATHANIEL  | ADAM      |   5.99 |
+| NATHANIEL  | ADAM      |   4.99 |
+| NATHANIEL  | ADAM      |   6.99 |
+| NATHANIEL  | ADAM      |   8.99 |
+| NATHANIEL  | ADAM      |   4.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   4.99 |
+| KATHLEEN   | ADAMS     |   4.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   6.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   6.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   2.99 |
+| KATHLEEN   | ADAMS     |   4.99 |
+| KATHLEEN   | ADAMS     |   2.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   2.99 |
+| KATHLEEN   | ADAMS     |   2.99 |
+| KATHLEEN   | ADAMS     |   0.99 |
+| KATHLEEN   | ADAMS     |   6.99 |
+| KATHLEEN   | ADAMS     |   4.99 |
+| KATHLEEN   | ADAMS     |   4.99 |
+| KATHLEEN   | ADAMS     |   2.99 |
+| KATHLEEN   | ADAMS     |   1.99 |
+| KATHLEEN   | ADAMS     |   4.99 |
+| KATHLEEN   | ADAMS     |   9.99 |
+| KATHLEEN   | ADAMS     |   4.99 |
+| DIANA      | ALEXANDER |   3.99 |
+| DIANA      | ALEXANDER |   7.99 |
+| DIANA      | ALEXANDER |   0.99 |
+| DIANA      | ALEXANDER |   0.99 |
+| DIANA      | ALEXANDER |   5.99 |
+| DIANA      | ALEXANDER |   0.99 |
+| DIANA      | ALEXANDER |   0.99 |
+| DIANA      | ALEXANDER |   2.99 |
+| DIANA      | ALEXANDER |   2.99 |
+| DIANA      | ALEXANDER |   4.99 |
+| DIANA      | ALEXANDER |   0.99 |
+| DIANA      | ALEXANDER |   4.99 |
+| DIANA      | ALEXANDER |   2.99 |
+| DIANA      | ALEXANDER |   4.99 |
+| DIANA      | ALEXANDER |   6.99 |
+| DIANA      | ALEXANDER |   3.99 |
+| DIANA      | ALEXANDER |   4.99 |
+| DIANA      | ALEXANDER |   3.99 |
+| DIANA      | ALEXANDER |   4.99 |
+| DIANA      | ALEXANDER |   4.99 |
+| DIANA      | ALEXANDER |   3.99 |
+| DIANA      | ALEXANDER |   4.99 |
+| DIANA      | ALEXANDER |   4.99 |
+| DIANA      | ALEXANDER |   0.99 |
++------------+-----------+--------+
+100 rows in set (0.01 sec)
+
+mysql>  select b.first_name, b.last_name, a.amount
+    ->     -> from payment a
+    ->     -> inner join customer b
+    ->     -> on a.customer_id = b.customer_id
+    -> group by a.customer_id
+    -> limit 100;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from payment a
+    -> inner join customer b
+    -> on a.customer_id = b.customer' at line 2
+mysql> select b.first_name, b.last_name,
+    -> sum(a.amount) as total
+    -> from payment a
+    -> inner join customer b
+    -> on a.customer_id = b.customer_id
+    -> group by a.customer_id
+    -> limit 100;
++------------+------------+--------+
+| first_name | last_name  | total  |
++------------+------------+--------+
+| MARY       | SMITH      | 118.68 |
+| PATRICIA   | JOHNSON    | 128.73 |
+| LINDA      | WILLIAMS   | 135.74 |
+| BARBARA    | JONES      |  81.78 |
+| ELIZABETH  | BROWN      | 144.62 |
+| JENNIFER   | DAVIS      |  93.72 |
+| MARIA      | MILLER     | 151.67 |
+| SUSAN      | WILSON     |  92.76 |
+| MARGARET   | MOORE      |  89.77 |
+| DOROTHY    | TAYLOR     |  99.75 |
+| LISA       | ANDERSON   | 106.76 |
+| NANCY      | THOMAS     | 103.72 |
+| KAREN      | JACKSON    | 131.73 |
+| BETTY      | WHITE      | 117.72 |
+| HELEN      | HARRIS     | 134.68 |
+| SANDRA     | MARTIN     | 118.72 |
+| DONNA      | THOMPSON   |  98.79 |
+| CAROL      | GARCIA     |  91.78 |
+| RUTH       | MARTINEZ   | 125.76 |
+| SHARON     | ROBINSON   | 115.70 |
+| MICHELLE   | CLARK      | 155.65 |
+| LAURA      | RODRIGUEZ  | 113.78 |
+| SARAH      | LEWIS      | 119.70 |
+| KIMBERLY   | LEE        |  95.75 |
+| DEBORAH    | WALKER     | 115.71 |
+| JESSICA    | HALL       | 152.66 |
+| SHIRLEY    | ALLEN      | 126.69 |
+| CYNTHIA    | YOUNG      | 111.68 |
+| ANGELA     | HERNANDEZ  | 140.64 |
+| MELISSA    | KING       | 123.66 |
+| BRENDA     | WRIGHT     | 104.74 |
+| AMY        | LOPEZ      | 127.71 |
+| ANNA       | HILL       |  91.79 |
+| REBECCA    | SCOTT      |  89.76 |
+| VIRGINIA   | GREEN      | 129.68 |
+| KATHLEEN   | ADAMS      |  92.73 |
+| PAMELA     | BAKER      |  95.77 |
+| MARTHA     | GONZALEZ   | 127.66 |
+| DEBRA      | NELSON     | 141.71 |
+| AMANDA     | CARTER     | 110.73 |
+| STEPHANIE  | MITCHELL   | 118.75 |
+| CAROLYN    | PEREZ      | 117.70 |
+| CHRISTINE  | ROBERTS    |  99.76 |
+| MARIE      | TURNER     | 114.74 |
+| JANET      | PHILLIPS   | 127.73 |
+| CATHERINE  | CAMPBELL   | 142.66 |
+| FRANCES    | PARKER     | 108.78 |
+| ANN        | EVANS      |  76.83 |
+| JOYCE      | EDWARDS    | 130.72 |
+| DIANE      | COLLINS    | 169.65 |
+| ALICE      | STEWART    | 138.67 |
+| JULIE      | SANCHEZ    | 107.71 |
+| HEATHER    | MORRIS     | 115.70 |
+| TERESA     | ROGERS     | 128.71 |
+| DORIS      | REED       | 100.78 |
+| GLORIA     | COOK       | 135.70 |
+| EVELYN     | MORGAN     | 114.72 |
+| JEAN       | BELL       | 115.73 |
+| CHERYL     | MURPHY     | 133.73 |
+| MILDRED    | BAILEY     |  98.75 |
+| KATHERINE  | RIVERA     |  58.86 |
+| JOAN       | COOPER     |  84.77 |
+| ASHLEY     | RICHARDSON | 112.75 |
+| JUDITH     | COX        | 100.67 |
+| ROSE       | HOWARD     | 103.78 |
+| JANICE     | WARD       | 144.66 |
+| KELLY      | TORRES     |  99.78 |
+| NICOLE     | PETERSON   |  94.78 |
+| JUDY       | GRAY       |  96.75 |
+| CHRISTINA  | RAMIREZ    |  80.82 |
+| KATHY      | JAMES      | 129.70 |
+| THERESA    | WATSON     |  99.70 |
+| BEVERLY    | BROOKS     |  97.76 |
+| DENISE     | KELLY      | 103.73 |
+| TAMMY      | SANDERS    | 155.59 |
+| IRENE      | PRICE      |  77.77 |
+| JANE       | BENNETT    | 100.72 |
+| LORI       | WOOD       | 141.69 |
+| RACHEL     | BARNES     |  84.78 |
+| MARILYN    | ROSS       | 137.70 |
+| ANDREA     | HENDERSON  |  93.78 |
+| KATHRYN    | COLEMAN    | 130.74 |
+| LOUISE     | JENKINS    | 101.75 |
+| SARA       | PERRY      | 141.67 |
+| ANNE       | POWELL     |  87.77 |
+| JACQUELINE | LONG       | 148.67 |
+| WANDA      | PATTERSON  | 145.70 |
+| BONNIE     | HUGHES     |  87.79 |
+| JULIA      | FLORES     | 134.68 |
+| RUBY       | WASHINGTON | 110.72 |
+| LOIS       | BUTLER     | 113.65 |
+| TINA       | SIMMONS    | 133.72 |
+| PHYLLIS    | FOSTER     |  91.77 |
+| NORMA      | GONZALES   |  79.79 |
+| PAULA      | BRYANT     |  77.82 |
+| DIANA      | ALEXANDER  | 105.73 |
+| ANNIE      | RUSSELL    |  58.82 |
+| LILLIAN    | GRIFFIN    | 106.75 |
+| EMILY      | DIAZ       |  91.76 |
+| ROBIN      | HAYES      | 102.76 |
++------------+------------+--------+
+100 rows in set (0.01 sec)
+
+mysql> select b.first_name, b.last_name,
+    ->     -> sum(a.amount) as total
+    ->     -> from payment a
+    ->     -> inner join customer b
+    ->     -> on a.customer_id = b.customer_id
+    ->     -> group by a.customer_id
+    -> order by total;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> sum(a.amount) as total
+    -> from payment a
+    -> inner join customer b
+   ' at line 2
+mysql> show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.00 sec)
+
+mysql> desc rental;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| rental_id    | int                | NO   | PRI | NULL              | auto_increment                                |
+| rental_date  | datetime           | NO   | MUL | NULL              |                                               |
+| inventory_id | mediumint unsigned | NO   | MUL | NULL              |                                               |
+| customer_id  | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| return_date  | datetime           | YES  |     | NULL              |                                               |
+| staff_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.00 sec)
+
+mysql> desc inventory;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| inventory_id | mediumint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| film_id      | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| store_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+4 rows in set (0.01 sec)
+
+mysql> desc film;
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field                | Type                                                                | Null | Key | Default      | Extra                                         |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| film_id              | smallint unsigned                                                   | NO   | PRI | NULL      | auto_increment                                |
+| title                | varchar(128)                                                        | NO   | MUL | NULL      |                                               |
+| description          | text                                                                | YES  |     | NULL      |                                               |
+| release_year         | year                                                                | YES  |     | NULL      |                                               |
+| language_id          | tinyint unsigned                                                    | NO   | MUL | NULL      |                                               |
+| original_language_id | tinyint unsigned                                                    | YES  | MUL | NULL      |                                               |
+| rental_duration      | tinyint unsigned                                                    | NO   |     | 3      |                                               |
+| rental_rate          | decimal(4,2)                                                        | NO   |     | 4.99      |                                               |
+| length               | smallint unsigned                                                   | YES  |     | NULL      |                                               |
+| replacement_cost     | decimal(5,2)                                                        | NO   |     | 19.99      |                                               |
+| rating               | enum('G','PG','PG-13','R','NC-17')                                  | YES  |     | G      |                                               |
+| special_features     | set('Trailers','Commentaries','Deleted Scenes','Behind the Scenes') | YES  |     | NULL      |                                               |
+| last_update          | timestamp                                                           | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+13 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(*) FROM RENTAL;
++----------+
+| COUNT(*) |
++----------+
+|    16044 |
++----------+
+1 row in set (0.01 sec)
+
+mysql> SELECT B.FIRST_NAME, B.LAST_NAME, D.TITLE
+    -> FROM RENTAL A
+    -> INNER JOIN CUSTOMER B ON A.CUSTOMER_ID = B.CUSTOMER_ID
+    -> INNER JOIN INVENTORY C ON A.INVENTORY_ID = C.INVENTORY_ID
+    -> INNER JOIN FILM D ON C.FILM_ID = D.FILM_ID
+    -> LIMIT 100;
++------------+-------------+------------------+
+| FIRST_NAME | LAST_NAME   | TITLE            |
++------------+-------------+------------------+
+| JOEL       | FRANCISCO   | ACADEMY DINOSAUR |
+| GABRIEL    | HARDER      | ACADEMY DINOSAUR |
+| DIANNE     | SHELTON     | ACADEMY DINOSAUR |
+| NORMAN     | CURRIER     | ACADEMY DINOSAUR |
+| BEATRICE   | ARNOLD      | ACADEMY DINOSAUR |
+| GERALDINE  | PERKINS     | ACADEMY DINOSAUR |
+| VIRGIL     | WOFFORD     | ACADEMY DINOSAUR |
+| WILLIE     | MARKHAM     | ACADEMY DINOSAUR |
+| DEBRA      | NELSON      | ACADEMY DINOSAUR |
+| DARREN     | WINDHAM     | ACADEMY DINOSAUR |
+| ROBERT     | BAUGHMAN    | ACADEMY DINOSAUR |
+| HENRY      | BILLINGSLEY | ACADEMY DINOSAUR |
+| SERGIO     | STANFIELD   | ACADEMY DINOSAUR |
+| FREDDIE    | DUGGAN      | ACADEMY DINOSAUR |
+| MARIE      | TURNER      | ACADEMY DINOSAUR |
+| MATTIE     | HOFFMAN     | ACADEMY DINOSAUR |
+| DWAYNE     | OLVERA      | ACADEMY DINOSAUR |
+| CARL       | ARTIS       | ACADEMY DINOSAUR |
+| NATHAN     | RUNYON      | ACADEMY DINOSAUR |
+| HECTOR     | POINDEXTER  | ACADEMY DINOSAUR |
+| TINA       | SIMMONS     | ACADEMY DINOSAUR |
+| SUSAN      | WILSON      | ACADEMY DINOSAUR |
+| REBECCA    | SCOTT       | ACADEMY DINOSAUR |
+| PENNY      | NEAL        | ACE GOLDFINGER   |
+| BRANDON    | HUEY        | ACE GOLDFINGER   |
+| LUCILLE    | HOLMES      | ACE GOLDFINGER   |
+| KATHRYN    | COLEMAN     | ACE GOLDFINGER   |
+| AMBER      | DIXON       | ACE GOLDFINGER   |
+| STACY      | CUNNINGHAM  | ACE GOLDFINGER   |
+| JESSIE     | MILAM       | ACE GOLDFINGER   |
+| PEARL      | GARZA       | ADAPTATION HOLES |
+| TRAVIS     | ESTEP       | ADAPTATION HOLES |
+| STELLA     | MORENO      | ADAPTATION HOLES |
+| CASSANDRA  | WALTERS     | ADAPTATION HOLES |
+| DEBORAH    | WALKER      | ADAPTATION HOLES |
+| ROBIN      | HAYES       | ADAPTATION HOLES |
+| OLGA       | JIMENEZ     | ADAPTATION HOLES |
+| MARY       | SMITH       | ADAPTATION HOLES |
+| ROSE       | HOWARD      | ADAPTATION HOLES |
+| JOANNE     | ROBERTSON   | ADAPTATION HOLES |
+| STEVEN     | CURLEY      | ADAPTATION HOLES |
+| MARION     | SNYDER      | ADAPTATION HOLES |
+| VIVIAN     | RUIZ        | AFFAIR PREJUDICE |
+| NINA       | SOTO        | AFFAIR PREJUDICE |
+| JORDAN     | ARCHULETA   | AFFAIR PREJUDICE |
+| DANIELLE   | DANIELS     | AFFAIR PREJUDICE |
+| SUE        | PETERS      | AFFAIR PREJUDICE |
+| MICHAEL    | SILVERMAN   | AFFAIR PREJUDICE |
+| JEFF       | EAST        | AFFAIR PREJUDICE |
+| MEGAN      | PALMER      | AFFAIR PREJUDICE |
+| ELEANOR    | HUNT        | AFFAIR PREJUDICE |
+| NATALIE    | MEYER       | AFFAIR PREJUDICE |
+| TOMMY      | COLLAZO     | AFFAIR PREJUDICE |
+| MINNIE     | ROMERO      | AFFAIR PREJUDICE |
+| CARMEN     | OWENS       | AFFAIR PREJUDICE |
+| DEANNA     | BYRD        | AFFAIR PREJUDICE |
+| KIMBERLY   | LEE         | AFFAIR PREJUDICE |
+| BEVERLY    | BROOKS      | AFFAIR PREJUDICE |
+| JIMMY      | SCHRADER    | AFFAIR PREJUDICE |
+| JANICE     | WARD        | AFFAIR PREJUDICE |
+| RUBEN      | GEARY       | AFFAIR PREJUDICE |
+| CARMEN     | OWENS       | AFFAIR PREJUDICE |
+| WALLACE    | SLONE       | AFFAIR PREJUDICE |
+| OSCAR      | AQUINO      | AFFAIR PREJUDICE |
+| JEROME     | KENYON      | AFFAIR PREJUDICE |
+| CONNIE     | WALLACE     | AFRICAN EGG      |
+| RICARDO    | MEADOR      | AFRICAN EGG      |
+| BARRY      | LOVELACE    | AFRICAN EGG      |
+| CASEY      | MENA        | AFRICAN EGG      |
+| JOSHUA     | MARK        | AFRICAN EGG      |
+| CURTIS     | IRBY        | AFRICAN EGG      |
+| NORA       | HERRERA     | AFRICAN EGG      |
+| AMY        | LOPEZ       | AFRICAN EGG      |
+| ELAINE     | STEVENS     | AFRICAN EGG      |
+| GILBERT    | SLEDGE      | AFRICAN EGG      |
+| JOYCE      | EDWARDS     | AFRICAN EGG      |
+| SETH       | HANNON      | AFRICAN EGG      |
+| CLARENCE   | GAMEZ       | AGENT TRUMAN     |
+| JANET      | PHILLIPS    | AGENT TRUMAN     |
+| LESLIE     | SEWARD      | AGENT TRUMAN     |
+| PERRY      | SWAFFORD    | AGENT TRUMAN     |
+| IDA        | ANDREWS     | AGENT TRUMAN     |
+| CATHERINE  | CAMPBELL    | AGENT TRUMAN     |
+| TERRY      | GRISSOM     | AGENT TRUMAN     |
+| BETTY      | WHITE       | AGENT TRUMAN     |
+| ALAN       | KAHN        | AGENT TRUMAN     |
+| ELIZABETH  | BROWN       | AGENT TRUMAN     |
+| TONYA      | CHAPMAN     | AGENT TRUMAN     |
+| TRACY      | COLE        | AGENT TRUMAN     |
+| DIANE      | COLLINS     | AGENT TRUMAN     |
+| CORY       | MEEHAN      | AGENT TRUMAN     |
+| MAURICE    | CRAWLEY     | AGENT TRUMAN     |
+| GINA       | WILLIAMSON  | AGENT TRUMAN     |
+| ANTHONY    | SCHWAB      | AGENT TRUMAN     |
+| CLINTON    | BUFORD      | AGENT TRUMAN     |
+| KRISTIN    | JOHNSTON    | AGENT TRUMAN     |
+| ROSEMARY   | SCHMIDT     | AGENT TRUMAN     |
+| MARTHA     | GONZALEZ    | AGENT TRUMAN     |
+| FRED       | WHEAT       | AIRPLANE SIERRA  |
+| DEAN       | SAUER       | AIRPLANE SIERRA  |
++------------+-------------+------------------+
+100 rows in set (0.02 sec)
+
+mysql> select count(*) from film;
++----------+
+| count(*) |
++----------+
+|     1000 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.00 sec)
+
+mysql> select * from actor
+    -> limit 50;
++----------+------------+--------------+---------------------+
+| actor_id | first_name | last_name    | last_update         |
++----------+------------+--------------+---------------------+
+|        1 | PENELOPE   | GUINESS      | 2006-02-15 04:34:33 |
+|        2 | NICK       | WAHLBERG     | 2006-02-15 04:34:33 |
+|        3 | ED         | CHASE        | 2006-02-15 04:34:33 |
+|        4 | JENNIFER   | DAVIS        | 2006-02-15 04:34:33 |
+|        5 | JOHNNY     | LOLLOBRIGIDA | 2006-02-15 04:34:33 |
+|        6 | BETTE      | NICHOLSON    | 2006-02-15 04:34:33 |
+|        7 | GRACE      | MOSTEL       | 2006-02-15 04:34:33 |
+|        8 | MATTHEW    | JOHANSSON    | 2006-02-15 04:34:33 |
+|        9 | JOE        | SWANK        | 2006-02-15 04:34:33 |
+|       10 | CHRISTIAN  | GABLE        | 2006-02-15 04:34:33 |
+|       11 | ZERO       | CAGE         | 2006-02-15 04:34:33 |
+|       12 | KARL       | BERRY        | 2006-02-15 04:34:33 |
+|       13 | UMA        | WOOD         | 2006-02-15 04:34:33 |
+|       14 | VIVIEN     | BERGEN       | 2006-02-15 04:34:33 |
+|       15 | CUBA       | OLIVIER      | 2006-02-15 04:34:33 |
+|       16 | FRED       | COSTNER      | 2006-02-15 04:34:33 |
+|       17 | HELEN      | VOIGHT       | 2006-02-15 04:34:33 |
+|       18 | DAN        | TORN         | 2006-02-15 04:34:33 |
+|       19 | BOB        | FAWCETT      | 2006-02-15 04:34:33 |
+|       20 | LUCILLE    | TRACY        | 2006-02-15 04:34:33 |
+|       21 | KIRSTEN    | PALTROW      | 2006-02-15 04:34:33 |
+|       22 | ELVIS      | MARX         | 2006-02-15 04:34:33 |
+|       23 | SANDRA     | KILMER       | 2006-02-15 04:34:33 |
+|       24 | CAMERON    | STREEP       | 2006-02-15 04:34:33 |
+|       25 | KEVIN      | BLOOM        | 2006-02-15 04:34:33 |
+|       26 | RIP        | CRAWFORD     | 2006-02-15 04:34:33 |
+|       27 | JULIA      | MCQUEEN      | 2006-02-15 04:34:33 |
+|       28 | WOODY      | HOFFMAN      | 2006-02-15 04:34:33 |
+|       29 | ALEC       | WAYNE        | 2006-02-15 04:34:33 |
+|       30 | SANDRA     | PECK         | 2006-02-15 04:34:33 |
+|       31 | SISSY      | SOBIESKI     | 2006-02-15 04:34:33 |
+|       32 | TIM        | HACKMAN      | 2006-02-15 04:34:33 |
+|       33 | MILLA      | PECK         | 2006-02-15 04:34:33 |
+|       34 | AUDREY     | OLIVIER      | 2006-02-15 04:34:33 |
+|       35 | JUDY       | DEAN         | 2006-02-15 04:34:33 |
+|       36 | BURT       | DUKAKIS      | 2006-02-15 04:34:33 |
+|       37 | VAL        | BOLGER       | 2006-02-15 04:34:33 |
+|       38 | TOM        | MCKELLEN     | 2006-02-15 04:34:33 |
+|       39 | GOLDIE     | BRODY        | 2006-02-15 04:34:33 |
+|       40 | JOHNNY     | CAGE         | 2006-02-15 04:34:33 |
+|       41 | JODIE      | DEGENERES    | 2006-02-15 04:34:33 |
+|       42 | TOM        | MIRANDA      | 2006-02-15 04:34:33 |
+|       43 | KIRK       | JOVOVICH     | 2006-02-15 04:34:33 |
+|       44 | NICK       | STALLONE     | 2006-02-15 04:34:33 |
+|       45 | REESE      | KILMER       | 2006-02-15 04:34:33 |
+|       46 | PARKER     | GOLDBERG     | 2006-02-15 04:34:33 |
+|       47 | JULIA      | BARRYMORE    | 2006-02-15 04:34:33 |
+|       48 | FRANCES    | DAY-LEWIS    | 2006-02-15 04:34:33 |
+|       49 | ANNE       | CRONYN       | 2006-02-15 04:34:33 |
+|       50 | NATALIE    | HOPKINS      | 2006-02-15 04:34:33 |
++----------+------------+--------------+---------------------+
+50 rows in set (0.00 sec)
+
+mysql> select * from actor_info
+    -> limit 50;
++----------+------------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| actor_id | first_name | last_name    | film_info                                                                    |
++----------+------------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|        1 | PENELOPE   | GUINESS      | Animation: ANACONDA CONFESSIONS; Children: LANGUAGE COWBOY; Classics: COLOR PHILADELPHIA, WESTWARD SEABISCUIT; Comedy: VERTIGO NORTHWEST; Documentary: ACADEMY DINOSAUR; Family: KING EVOLUTION, SPLASH GUMP; Foreign: MULHOLLAND BEAST; Games: BULWORTH COMMANDMENTS, HUMAN GRAFFITI; Horror: ELEPHANT TROJAN, LADY STAGE, RULES HUMAN; Music: WIZARD COLDBLOODED; New: ANGELS LIFE, OKLAHOMA JUMANJI; Sci-Fi: CHEAPER CLYDE; Sports: GLEAMING JAWBREAKER                                                                    |
+|        2 | NICK       | WAHLBERG     | Action: BULL SHAWSHANK; Animation: FIGHT JAWBREAKER; Children: JERSEY SASSY; Classics: DRACULA CRYSTAL, GILBERT PELICAN; Comedy: MALLRATS UNITED, RUSHMORE MERMAID; Documentary: ADAPTATION HOLES; Drama: WARDROBE PHANTOM; Family: APACHE DIVINE, CHISUM BEHAVIOR, INDIAN LOVE, MAGUIRE APACHE; Foreign: BABY HALL, HAPPINESSUNITED; Games: ROOF CHAMPION; Music: LUCKY FLYING; New: DESTINY SATURDAY, FLASH WARS, JEKYLL FROGMEN, MASK PEACH; Sci-Fi: CHAINSAW UPTOWN, GOODFELLAS SALUTE; Travel: LIAISONS SWEET, SMILE EARRING                                                                    |
+|        3 | ED         | CHASE        | Action: CADDYSHACK JEDI, FORREST SONS; Classics: FROST HEAD, JEEPERS WEDDING; Documentary: ARMY FLINTSTONES, FRENCH HOLIDAY, HALLOWEEN NUTS, HUNTER ALTER, WEDDING APOLLO, YOUNG LANGUAGE; Drama: LUCKOPUS, NECKLACE OUTBREAK, SPICE SORORITY; Foreign: COWBOY DOOM, WHALE BIKINI; Music: ALONE TRIP; New: EVE RESURRECTION, PLATOON INSTINCT; Sci-Fi: WEEKEND PERSONAL; Sports: ARTIST COLDBLOODED, IMAGE PRINCESS; Travel: BOONDOCK BALLROOM                                                                    |
+|        4 | JENNIFER   | DAVIS        | Action: BAREFOOT MANCHURIAN; Animation: ANACONDA CONFESSIONS, GHOSTBUSTERS ELF; Comedy: SUBMARINE BED; Documentary: BED HIGHBALL, NATIONAL STORY, RAIDERS ANTITRUST; Drama: BLADE POLISH, GREEDY ROOTS; Family: SPLASH GUMP; Horror: TREASURE COMMAND; Music: HANOVER GALAXY, REDS POCUS; New: ANGELS LIFE, JUMANJI BLADE, OKLAHOMA JUMANJI; Sci-Fi: RANDOM GO, SILVERADO GOLDFINGER, UNFORGIVEN ZOOLANDER; Sports: INSTINCT AIRPORT, POSEIDON FOREVER; Travel: BOONDOCK BALLROOM                                                                    |
+|        5 | JOHNNY     | LOLLOBRIGIDA | Action: AMADEUS HOLY, GRAIL FRANKENSTEIN, RINGS HEARTBREAKERS; Animation: SUNRISE LEAGUE; Children: HALL CASSIDY; Comedy: DADDY PITTSBURGH; Documentary: BONNIE HOLOCAUST, METAL ARMAGEDDON, PACIFIC AMISTAD, POCUS PULP; Drama: CHITTY LOCK, CONEHEADS SMOOCHY; Games: FIRE WOLVES; Horror: COMMANDMENTS EXPRESS, LOVE SUICIDES, PATTON INTERVIEW; Music: BANGER PINOCCHIO, HEAVENLY GUN; New: FRONTIER CABIN, RIDGEMONT SUBMARINE; Sci-Fi: DAISY MENAGERIE, GOODFELLAS SALUTE, SOLDIERS EVOLUTION; Sports: GROOVE FICTION, KRAMER CHOCOLATE, STAR OPERATION; Travel: ENOUGH RAGING, ESCAPE METROPOLIS, SMILE EARRING                                                                    |
+|        6 | BETTE      | NICHOLSON    | Action: ANTITRUST TOMATOES; Animation: BIKINI BORROWERS, CROSSROADS CASUALTIES, POTLUCK MIXED, TITANIC BOONDOCK; Children: LANGUAGE COWBOY; Classics: BEAST HUNCHBACK; Documentary: COAST RAINBOW; Family: BANG KWAI; Foreign: CALENDAR GUNFIGHT, MULHOLLAND BEAST; New: WYOMING STORM; Sci-Fi: COLDBLOODED DARLING; Sports: DROP WATERFRONT, KRAMER CHOCOLATE, LESSON CLEOPATRA, LIBERTY MAGNIFICENT, TRADING PINOCCHIO; Travel: IGBY MAKER, SPEED SUIT                                                                    |
+|        7 | GRACE      | MOSTEL       | Action: BERETS AGENT, EXCITEMENT EVE; Animation: SLEEPLESS MONSOON, TRACY CIDER; Children: WARLOCK WEREWOLF; Classics: MALKOVICH PET, OCTOBER SUBMARINE; Drama: CONFESSIONS MAGUIRE, DECEIVER BETRAYED, DESTINATION JERK, NECKLACE OUTBREAK, SAINTS BRIDE, SAVANNAH TOWN, TREATMENT JEKYLL; Foreign: COMMAND DARLING, HELLFIGHTERS SIERRA, SCISSORHANDS SLUMS, TOWN ARK, WAR NOTTING; Games: DAZED PUNK; Horror: ARACHNOPHOBIA ROLLERCOASTER, GASLIGHTCRUSADE; New: ANGELS LIFE, BREAKING HOME, SLEEPY JAPANESE, STING PERSONAL; Sci-Fi: OPEN AFRICAN; Sports: ANONYMOUS HUMAN, INSTINCT AIRPORT, POSEIDON FOREVER                                                                    |
+|        8 | MATTHEW    | JOHANSSON    | Action: CAMPUS REMEMBER, DANCES NONE; Animation: SUGAR WONKA; Classics: LIGHTSDEER, MALKOVICH PET, TOMORROW HUSTLER; Drama: CONQUERER NUTS, HANGING DEEP, SCORPION APOLLO; Family: INDIAN LOVE; Foreign: BABY HALL, SCHOOL JACKET; Music: CLONES PINOCCHIO, DRIVING POLISH, RUNNER MADIGAN, VANISHING ROCKY; New: FLASH WARS;Sci-Fi: CROWDS TELEMARK; Sports: DURHAM PANKY, LOSER HUSTLER                                                                    |
+|        9 | JOE        | SWANK        | Action: PRIMARY GLASS, WATERFRONT DELIVERANCE; Animation: LAWLESS VISION, SUNRISE LEAGUE; Children: CROOKED FROGMEN, SWEETHEARTS SUSPECTS, TIES HUNGER; Classics: SNATCHERS MONTEZUMA; Documentary: MAJESTIC FLOATS, PACIFIC AMISTAD, UNTOUCHABLES SUNRISE; Drama: DALMATIONS SWEDEN, LEBOWSKI SOLDIERS; Family: CHOCOLAT HARRY; Foreign: CHOCOLATE DUCK; Games: CURTAIN VIDEOTAPE; Horror: ANYTHING SAVANNAH, REEF SALUTE; Music: BIRCH ANTITRUST, RUNNER MADIGAN; New: WILD APOLLO; Sports: PERDITION FARGO; Travel: HORROR REIGN, SMILE EARRING, TRAFFIC HOBBIT                                                                    |
+|       10 | CHRISTIAN  | GABLE        | Action: LORD ARIZONA, WATERFRONT DELIVERANCE; Animation: PUNK DIVORCE; Children: CROOKED FROGMEN; Classics: JEEPERS WEDDING, PREJUDICE OLEANDER; Comedy: LIFE TWISTED; Documentary: ACADEMY DINOSAUR, MOD SECRETARY, WEDDING APOLLO; Drama: GOLDFINGER SENSIBILITY; Foreign: USUAL UNTOUCHABLES; Games: DIVINE RESURRECTION; Horror: ALABAMA DEVIL, REAP UNFAITHFUL; Music: JAWBREAKER BROOKLYN, WIZARD COLDBLOODED, WON DARES; New: DRAGONFLY STRANGERS; Sci-Fi: VACATION BOONDOCK; Sports: SHAKESPEARE SADDLE; Travel: TROUBLE DATE                                                                    |
+|       11 | ZERO       | CAGE         | Action: DANCES NONE, HANDICAP BOONDOCK, STORY SIDE; Animation: CANYON STOCK, HORN WORKING; Children: JERSEY SASSY, TOOTSIE PILOT, UPTOWN YOUNG; Comedy: VELVET TERMINATOR; Documentary: MOD SECRETARY,THIN SAGEBRUSH; Drama: RACER EGG, WEST LION; Family: GANDHI KWAI; Foreign: MEET CHOCOLATE; Games: ENCINO ELF, MOONWALKER FOOL; Horror: STRANGERS GRAFFITI; Music: OLEANDER CLUE; New: ENDING CROWDS, GODFATHER DIARY; Sports: HONEY TIES, IMAGEPRINCESS, LOSER HUSTLER; Travel: WORKER TARZAN                                                                    |
+|       12 | KARL       | BERRY        | Action: STAGECOACH ARMAGEDDON; Animation: DARES PLUTO, DOORS PRESIDENT, TELEMARK HEARTBREAKERS; Children: FURY MURDER; Classics: ARIZONA BANG, BOUND CHEAPER; Comedy: PERFECT GROOVE, SWEDEN SHINING; Documentary: HARDLY ROBBERS, INDEPENDENCE HOTEL, SMOKING BARBARELLA, VIRGINIAN PLUTO; Drama: BUNCH MINDS, REUNION WITCHES; Family: DATE SPEED; Foreign: ALLEY EVOLUTION, HIGHBALL POTTER; Horror: ARABIA DOGMA, BOWFINGER GABLES, MONTEREY LABYRINTH, REAP UNFAITHFUL; Music: ALONE TRIP, LUCKY FLYING; New: CLEOPATRA DEVIL, DAY UNFAITHFUL, OKLAHOMA JUMANJI; Sci-Fi: CONNECTICUT TRAMP; Sports: HOLES BRANNIGAN, NOVOCAINE FLIGHT; Travel: LEATHERNECKS DWARFS                                                                    |
+|       13 | UMA        | WOOD         | Action: ANTITRUST TOMATOES, CLUELESS BUCKET; Animation: CLASH FREDDY, INCH JET, SNOWMAN ROLLERCOASTER; Children: CABIN FLASH, LEGALLY SECRETARY, MODEL FISH, SPLENDOR PATTON; Classics: GALAXY SWEETHEARTS, STEEL SANTA; Comedy: GROUNDHOG UNCUT, LIFE TWISTED, LION UNCUT; Documentary: HOMEWARD CIDER, METAL ARMAGEDDON, WEDDING APOLLO; Drama: TORQUE BOUND; Family: LOLITA WORLD, SPLASH GUMP; Foreign: FRIDA SLIPPER; Games: GRINCH MASSAGE, MOONWALKER FOOL; Horror: MOTIONS DETAILS, ZHIVAGO CORE; Music: ALONE TRIP, REBEL AIRPORT; New: ATTRACTION NEWTON, CHINATOWN GLADIATOR; Sci-Fi: DAISY MENAGERIE, SOLDIERS EVOLUTION; Sports: DRIVER ANNIE, RIDER CADDYSHACK; Travel: BOONDOCK BALLROOM, LEATHERNECKS DWARFS                                               |
+|       14 | VIVIEN     | BERGEN       | Action: DRIFTER COMMANDMENTS, EXCITEMENT EVE, HILLS NEIGHBORS; Animation: CLASH FREDDY, DONNIE ALLEY; Children: GORGEOUS BINGO, POLISH BROOKLYN; Classics: LOVELY JINGLE, LOVER TRUMAN, WESTWARD SEABISCUIT; Drama: HOBBIT ALIEN; Foreign: TRAP GUYS; Games: DIRTY ACE, TYCOON GATHERING; Horror: DRUMS DYNAMITE, HIGH ENCINO,JAPANESE RUN, KENTUCKIAN GIANT, STREETCAR INTENTIONS; Music: DRIVING POLISH, ENEMY ODDS, IMPACT ALADDIN; New: SALUTE APOLLO, STOCK GLASS, VOICE PEACH; Sports: CRANES RESERVOIR, MUSSOLINI SPOILERS, SATURDAY LAMBS, TIGHTS DAWN; Travel: ITALIAN AFRICAN                                                                    |
+|       15 | CUBA       | OLIVIER      | Action: MONTEZUMA COMMAND, WEREWOLF LOLA; Animation: BORROWERS BEDAZZLED, FLYING HOOK, LUKE MUMMY, THEORY MERMAID; Children: EMPIRE MALKOVICH, MAKER GABLES, NOON PAPI; Classics: BOUND CHEAPER, HYDE DOCTOR; Comedy: KNOCK WARLOCK; Family: APACHE DIVINE, SIEGE MADRE; Foreign: HELLFIGHTERS SIERRA, KISS GLORY; Games: DIVINE RESURRECTION, VOLCANO TEXAS; Horror: EGYPT TENENBAUMS; New: BUTCH PANTHER, OKLAHOMA JUMANJI; Sci-Fi: SOLDIERS EVOLUTION, UNFORGIVEN ZOOLANDER, WONDERLAND CHRISTMAS; Sports: ROSES TREASURE; Travel: CASSIDY WYOMING, FUGITIVE MAGUIRE, SHANEDARKNESS                                                                    |
+|       16 | FRED       | COSTNER      | Action: EASY GLADIATOR, ENTRAPMENT SATISFACTION, REAR TRADING; Animation: CAROL TEXAS, INCH JET, MIRACLE VIRTUAL, MISSION ZOOLANDER, THEORY MERMAID; Children: EMPIRE MALKOVICH; Classics: MAGNIFICENTCHITTY; Documentary: BROTHERHOOD BLANKET, DELIVERANCE MULHOLLAND; Drama: DECEIVER BETRAYED, SAINTS BRIDE; Family: BLANKET BEVERLY, EARRING INSTINCT, GABLES METROPOLIS; Foreign: IMPOSSIBLE PREJUDICE; Games: HUMAN GRAFFITI; New: CLEOPATRA DEVIL, EAGLES PANKY; Sci-Fi: CONNECTICUT TRAMP, WEEKEND PERSONAL; Sports: IMAGE PRINCESS, KRAMER CHOCOLATE, SENSE GREEK; Travel: BOONDOCK BALLROOM                                                                    |
+|       17 | HELEN      | VOIGHT       | Action: SIDE ARK; Animation: CLASH FREDDY, TELEMARK HEARTBREAKERS; Children: CASPER DRAGONFLY, EMPIRE MALKOVICH, LEGALLY SECRETARY, MICROCOSMOS PARADISE, STRANGER STRANGERS, SWEETHEARTS SUSPECTS, WARLOCK WEREWOLF; Classics: IRON MOON, TADPOLE PARK; Comedy: CAPER MOTIONS, CAT CONEHEADS, JAWS HARRY; Documentary: CUPBOARD SINNERS, INDEPENDENCE HOTEL, ROAD ROXANNE; Drama: LIES TREATMENT; Family: MOVIE SHAKESPEARE; Foreign: CYCLONE FAMILY,KISS GLORY, SCISSORHANDS SLUMS, WAR NOTTING; Games: DIVINE RESURRECTION, FEVER EMPIRE; Horror: FIDELITY DEVIL, SINNERS ATLANTIS; Music: GREATEST NORTH; New: BREAKING HOME, VOICE PEACH; Sports: MUMMY CREATURES                                                                    |
+|       18 | DAN        | TORN         | Action: REAR TRADING; Animation: EARLY HOME; Children: EMPIRE MALKOVICH, TEQUILA PAST; Classics: JERK PAYCHECK, LOVELY JINGLE, SLING LUKE; Drama: CONEHEADS SMOOCHY, VIRGIN DAISY; Foreign: INNOCENT USUAL; Games: STATE WASTELAND; Music: INSIDER ARIZONA; New: CHINATOWN GLADIATOR, FLASH WARS, MASK PEACH; Sci-Fi: ATTACKS HATE, SUN CONFESSIONS; Sports: ELIZABETH SHANE, MUSSOLINI SPOILERS, TUXEDO MILE; Travel: BOILED DARES, GUMP DATE                                                                    |
+|       19 | BOB        | FAWCETT      | Action: DARN FORRESTER; Animation: DARES PLUTO, LAWLESS VISION, OSCAR GOLD; Children: CIRCUS YOUTH; Classics: DYNAMITE TARZAN; Comedy: CONTROL ANTHEM, HATE HANDICAP, SADDLE ANTITRUST; Documentary: ADAPTATION HOLES, PELICAN COMFORTS; Drama: JACKET FRISCO, SCORPION APOLLO; Family: HOMICIDE PEACH; Games: DAZED PUNK; Horror: ACE GOLDFINGER; Music: PERSONAL LADYBUGS, RUNNER MADIGAN, TAXI KICK; New: CHINATOWN GLADIATOR, JUMANJI BLADE, RUN PACIFIC; Sci-Fi: RAGING AIRPLANE; Travel: LEATHERNECKS DWARFS, SHAWSHANK BUBBLE                                                                    |
+|       20 | LUCILLE    | TRACY        | Action: REAR TRADING; Animation: DOORS PRESIDENT; Classics: HYDE DOCTOR, PAJAMA JAWBREAKER, PATIENT SISTER, WASTELAND DIVINE; Comedy: JAWS HARRY; Documentary: ACADEMY DINOSAUR, EGG IGBY, MODERN DORADO, SAGEBRUSH CLUELESS; Drama: CHITTY LOCK, GOLDFINGER SENSIBILITY, ORIENT CLOSER; Family: BEDAZZLED MARRIED, DINOSAUR SECRETARY, EARRING INSTINCT, GANDHI KWAI, KING EVOLUTION; Foreign: LOSE INCH; Horror: LOLA AGENT; Music: BANGER PINOCCHIO; New: JUNGLE CLOSER, LOVERBOY ATTACKS; Sci-Fi: CHEAPER CLYDE, COLDBLOODED DARLING, RANDOM GO, SUN CONFESSIONS; Travel: SHANGHAI TYCOON, WINDOW SIDE                                                                    |
+|       21 | KIRSTEN    | PALTROW      | Action: DRIFTER COMMANDMENTS, LORD ARIZONA; Animation: THIEF PELICAN; Comedy: CLOSER BANG, PINOCCHIO SIMON; Documentary: CHICKEN HELLFIGHTERS, KILL BROTHERHOOD, ROAD ROXANNE; Drama: CONQUERER NUTS; Family: PRIX UNDEFEATED; Foreign: AGENT TRUMAN; Games: ENCINO ELF, LADYBUGS ARMAGEDDON; Horror: PULP BEVERLY, SLEEPING SUSPECTS; Music: HANOVER GALAXY, HOME PITY, WON DARES; New: FLASH WARS, PLUTO OLEANDER, UNBREAKABLE KARATE; Sci-Fi: SILVERADO GOLDFINGER, TITANS JERK; Sports: HONEY TIES, RIVER OUTLAW; Travel: BOONDOCK BALLROOM, BORN SPINAL                                                                    |
+|       22 | ELVIS      | MARX         | Action: BAREFOOT MANCHURIAN, CADDYSHACK JEDI, SKY MIRACLE, WATERFRONT DELIVERANCE; Animation: ANACONDA CONFESSIONS, BORROWERS BEDAZZLED, GANGS PRIDE, HOOK CHARIOTS; Children: JUMPING WRATH, POLISH BROOKLYN; Classics: LOVELY JINGLE, RIGHT CRANES; Drama: CHITTY LOCK, HOBBIT ALIEN, SEATTLE EXPECATIONS; Family: ODDS BOOGIE; Games: JERICHO MULAN, ROOF CHAMPION; Horror: ALABAMA DEVIL, KENTUCKIAN GIANT, MOTIONS DETAILS; Sci-Fi: GOODFELLAS SALUTE, TROJAN TOMORROW; Sports: EVOLUTION ALTER; Travel: EXPECATIONS NATURAL, OUTLAW HANKY                                                                    |
+|       23 | SANDRA     | KILMER       | Action: BULL SHAWSHANK, DARN FORRESTER, MAGNOLIA FORRESTER; Animation: BLACKOUT PRIVATE, OZ LIAISONS, SONS INTERVIEW; Children: GORGEOUS BINGO, JUMPING WRATH, SPLENDOR PATTON, STRANGER STRANGERS; Classics: CANDIDATE PERDITION, LOVELY JINGLE; Documentary: STREAK RIDGEMONT; Drama: SAVANNAH TOWN; Family: HOCUS FRIDA; Foreign: AGENT TRUMAN, HELLFIGHTERS SIERRA, HOTEL HAPPINESS; Games: CANDLES GRAPES, STATE WASTELAND; Horror: SLEEPING SUSPECTS, STREETCAR INTENTIONS; Music: OLEANDER CLUE, PERSONAL LADYBUGS, YOUTH KICK; New: DESTINY SATURDAY, VANISHED GARDEN;Sci-Fi: DIVIDE MONSTER, GOLDMINE TYCOON, IDENTITY LOVER; Sports: ARTIST COLDBLOODED, DRIVER ANNIE, POSEIDON FOREVER, SHAKESPEARE SADDLE; Travel: CASSIDY WYOMING, SPEED SUIT, WOLVES DESIRE |
+|       24 | CAMERON    | STREEP       | Action: CASUALTIES ENCINO, CROW GREASE; Children: LEGALLY SECRETARY; Comedy: CONNECTION MICROCOSMOS, DOOM DANCING, FREEDOM CLEOPATRA, PURE RUNNER; Documentary: ADAPTATION HOLES, COAST RAINBOW, CUPBOARD SINNERS; Drama: MOB DUFFEL, WEST LION; Family: BLUES INSTINCT, MOVIE SHAKESPEARE, SPINAL ROCKY, SPLASH GUMP; Foreign: CALENDAR GUNFIGHT, CHOCOLATE DUCK; Games: SEVEN SWARM; Horror: ELEPHANT TROJAN, PANIC CLUB; Sports: DROP WATERFRONT, INSTINCT AIRPORT; Travel: HAUNTED ANTITRUST                                                                    |
+|       25 | KEVIN      | BLOOM        | Action: AMERICAN CIRCUS, PRIMARY GLASS; Animation: DOUBLE WRATH, MASSAGE IMAGE, MISSION ZOOLANDER; Children: POLISH BROOKLYN, SABRINA MIDNIGHT; Comedy: HATE HANDICAP, SWEDEN SHINING; Drama: CONQUERER NUTS, DALMATIONS SWEDEN; Family: DATE SPEED; Foreign: FICTION CHRISTMAS; Music: BOOGIE AMELIE, HEAVENLY GUN; New: DESTINY SATURDAY, LOVERBOY ATTACKS; Sci-Fi: CITIZEN SHREK; Sports: HOLES BRANNIGAN, MUMMY CREATURES; Travel: TROUBLE DATE                                                                    |
+|       26 | RIP        | CRAWFORD     | Action: AMERICAN CIRCUS, FOOL MOCKINGBIRD, FORREST SONS, RINGS HEARTBREAKERS; Animation: DONNIE ALLEY, MASSAGE IMAGE, OSCAR GOLD; Children: HALL CASSIDY, POLISH BROOKLYN; Comedy: LONELY ELEPHANT, TRAMP OTHERS; Documentary: MADISON TRAP; Drama: CRAFT OUTFIELD, DESTINATION JERK, SAINTS BRIDE; Family: CHOCOLAT HARRY, GABLES METROPOLIS, PITTSBURGH HUNCHBACK, RANGE MOONWALKER, SIEGE MADRE; Foreign: CYCLONE FAMILY, SORORITY QUEEN; Horror: ALABAMA DEVIL, ARABIA DOGMA, TEXAS WATCH, TRAIN BUNCH; New: BOULEVARD MOB, BRANNIGAN SUNRISE, FRONTIER CABIN, OKLAHOMA JUMANJI; Sci-Fi: GUYS FALCON; Sports: SATURDAY LAMBS; Travel: BUCKET BROTHERHOOD                                                                    |
+|       27 | JULIA      | MCQUEEN      | Action: AMADEUS HOLY, MOCKINGBIRD HOLLYWOOD; Animation: SLEEPLESS MONSOON, TELEMARK HEARTBREAKERS, WONKA SEA; Children: SWEETHEARTS SUSPECTS, TIES HUNGER; Documentary: BONNIE HOLOCAUST, CIDER DESIRE, YOUNG LANGUAGE; Drama: CONEHEADS SMOOCHY, SCORPION APOLLO; Family: EFFECT GLADIATOR, GLADIATOR WESTWARD, PILOT HOOSIERS, PITTSBURGH HUNCHBACK, PRESIDENT BANG; Foreign: KISS GLORY; Horror: ARABIA DOGMA, FREDDY STORM, HIGH ENCINO, MONTEREY LABYRINTH, SPIRIT FLINTSTONES, STRANGERS GRAFFITI, TRAIN BUNCH; Music: HANOVER GALAXY, INSIDER ARIZONA, JAWBREAKER BROOKLYN, LUCKY FLYING; Sci-Fi: OPEN AFRICAN, WEEKEND PERSONAL; Sports: KRAMER CHOCOLATE; Travel: GAMES BOWFINGER                                                                    |
+|       28 | WOODY      | HOFFMAN      | Action: ENTRAPMENT SATISFACTION, MIDNIGHT WESTWARD, SHRUNK DIVINE; Animation: DUCK RACER, ROOM ROMAN, SNOWMAN ROLLERCOASTER, WAIT CIDER; Classics: ALICE FANTASIA, GILMORE BOILED, PAJAMA JAWBREAKER; Comedy: KNOCK WARLOCK; Documentary: BEACH HEARTBREAKERS, WIFE TURN; Drama: BUNCH MINDS, SHOOTIST SUPERFLY, SPICE SORORITY; Family: ATLANTIS CAUSE, PILOT HOOSIERS; Foreign: TRAP GUYS; Games: LAMBS CINCINATTI, MOONWALKER FOOL, SPY MILE; Music: BIRCH ANTITRUST, TELEGRAPH VOYAGE; New: BREAKING HOME, MAIDEN HOME, WYOMING STORM; Sci-Fi: NONE SPIKING; Sports: DURHAM PANKY, LOSER HUSTLER, NEIGHBORS CHARADE                                                                    |
+|       29 | ALEC       | WAYNE        | Action: BULL SHAWSHANK; Children: CABIN FLASH, MAGIC MALLRATS, UPTOWN YOUNG; Classics: CENTER DINOSAUR, JEOPARDY ENCINO, SUMMER SCARFACE; Comedy: FREEDOM CLEOPATRA, HUSTLER PARTY; Documentary: SMOKING BARBARELLA; Drama: BLADE POLISH, CONEHEADS SMOOCHY, ENCOUNTERS CURTAIN, VIRGIN DAISY; Family: EFFECT GLADIATOR; Foreign: FICTION CHRISTMAS; Games: OUTBREAK DIVINE; Music: CHAMBER ITALIAN, INSIDER ARIZONA; New: DESTINY SATURDAY, HOURS RAGE, MONEY HAROLD; Sci-Fi: EXPRESS LONELY, IDENTITY LOVER, REIGN GENTLEMEN; Sports: ALADDIN CALENDAR, JOON NORTHWEST, LIBERTY MAGNIFICENT; Travel: FUGITIVE MAGUIRE                                                                    |
+|       30 | SANDRA     | PECK         | Action: EXCITEMENT EVE, FIREHOUSE VIETNAM, RINGS HEARTBREAKERS, STAGECOACH ARMAGEDDON; Classics: GILBERT PELICAN; Documentary: ACADEMY DINOSAUR, VIRGINIAN PLUTO; Drama: BEETHOVEN EXORCIST; Family: BANG KWAI, DUMBO LUST; Foreign: MATRIX SNOWMAN; Horror: FAMILY SWEET; Music: SILENCE KANE; New: BIRDS PERDITION, FLASH WARS; Sci-Fi: BEVERLY OUTLAW; Sports: DUDE BLINDNESS; Travel: BOONDOCK BALLROOM, ENOUGH RAGING                                                                    |
+|       31 | SISSY      | SOBIESKI     | Action: SHRUNK DIVINE, SKY MIRACLE; Animation: TELEMARK HEARTBREAKERS; Comedy:CRAZY HOME, FERRIS MOTHER, WISDOM WORKER; Documentary: COAST RAINBOW; Drama: CHITTY LOCK, GONE TROUBLE, MOB DUFFEL, ROCKY WAR; Family: PRIX UNDEFEATED; Foreign: GREEK EVERYONE, HOOSIERS BIRDCAGE; New: CLYDE THEORY; Sci-Fi: OPEN AFRICAN; Travel: BORN SPINAL, FACTORY DRAGON                                                                    |
+|       32 | TIM        | HACKMAN      | Animation: PACKER MADIGAN; Children: UPTOWN YOUNG; Classics: LIGHTS DEER, SNATCHERS MONTEZUMA; Documentary: CUPBOARD SINNERS, DEEP CRUSADE, HOMEWARD CIDER; Drama: HAROLD FRENCH, MOB DUFFEL; Family: FEUD FROGMEN; Foreign: CALENDAR GUNFIGHT, HOOSIERS BIRDCAGE, MEET CHOCOLATE, PEARL DESTINY; Horror: BEHAVIOR RUNAWAY; Music: WIZARD COLDBLOODED; New: CHAPLIN LICENSE; Sci-Fi: FIDDLER LOST; Sports: CRUSADE HONEY, MUMMY CREATURES, PEACH INNOCENT; Travel: BOILED DARES, BUCKET BROTHERHOOD                                                                    |
+|       33 | MILLA      | PECK         | Action: BAREFOOT MANCHURIAN, DREAM PICKUP, MIDNIGHT WESTWARD; Animation: CLASHFREDDY, JUGGLER HARDLY; Children: DAUGHTER MADIGAN, ROBBERS JOON, WRONG BEHAVIOR; Classics: PREJUDICE OLEANDER; Comedy:RUSHMORE MERMAID; Documentary: RAIDERS ANTITRUST; Drama: JACKET FRISCO, NECKLACE OUTBREAK, SEATTLE EXPECATIONS; Foreign: CALENDAR GUNFIGHT; Games: FEATHERS METAL; Horror: ROCK INSTINCT, TEMPLE ATTRACTION, WATERSHIP FRONTIER; New: FATAL HAUNTED; Sci-Fi: WHISPERER GIANT; Sports: CHANCE RESURRECTION, PEACH INNOCENT; Travel: TEEN APOLLO                                                                    |
+|       34 | AUDREY     | OLIVIER      | Action: SIDE ARK; Children: STRANGER STRANGERS; Classics: LOATHING LEGALLY, VOLUME HOUSE; Comedy: CAPER MOTIONS, CONTROL ANTHEM, KNOCK WARLOCK; Documentary: FRENCH HOLIDAY, HALLOWEEN NUTS, SHIP WONDERLAND; Drama: CONEHEADS SMOOCHY; Family: ATLANTIS CAUSE; Foreign: KANE EXORCIST, USUAL UNTOUCHABLES, WHALE BIKINI; Games: HUMAN GRAFFITI; Music: DORADO NOTTING; New: BOULEVARD MOB, REDEMPTION COMFORTS, STING PERSONAL; Sports: GUNFIGHTER MUSSOLINI, PEAK FOREVER, SENSE GREEK, SQUAD FISH; Travel: CASSIDY WYOMING                                                                    |
+|       35 | JUDY       | DEAN         | Action: QUEST MUSSOLINI, RINGS HEARTBREAKERS, RUGRATS SHAKESPEARE; Animation: NASH CHOCOLAT; Documentary: MODERN DORADO; Foreign: BALLROOM MOCKINGBIRD, CYCLONE FAMILY, ROCKETEER MOTHER; Horror: ARACHNOPHOBIA ROLLERCOASTER; Sci-Fi: SOLDIERS EVOLUTION; Sports: ALADDIN CALENDAR, DROP WATERFRONT, GUNFIGHTER MUSSOLINI, MUSSOLINI SPOILERS; Travel: TROUBLE DATE                                                                    |
+|       36 | BURT       | DUKAKIS      | Action: TRUMAN CRAZY; Animation: DOUBLE WRATH, MENAGERIE RUSHMORE; Classics: JERK PAYCHECK, RIGHT CRANES; Comedy: HEAVEN FREEDOM; Documentary: HOMEWARD CIDER, INTOLERABLE INTENTIONS; Family: DINOSAUR SECRETARY, KING EVOLUTION, RANGE MOONWALKER; Foreign: ALIEN CENTER, GREEK EVERYONE, KANE EXORCIST; Games: GRINCH MASSAGE, GUN BONNIE, WANDA CHAMBER; Horror: COMMANDMENTS EXPRESS, MOTIONS DETAILS, REAP UNFAITHFUL; Music: HOME PITY; New: ENDING CROWDS, MONEY HAROLD; Sci-Fi: BLINDNESS GUN, GUYS FALCON, RANDOM GO; Sports: IMAGE PRINCESS, TALENTED HOMICIDE; Travel: VALENTINE VANISHING                                                                    |
+|       37 | VAL        | BOLGER       | Action: AMADEUS HOLY, DRIFTER COMMANDMENTS, PRIMARY GLASS; Animation: CANYON STOCK, WATCH TRACY; Children: JERSEY SASSY, MAKER GABLES, MODEL FISH, STRANGER STRANGERS; Classics: PATIENT SISTER, PREJUDICE OLEANDER; Comedy: CAPER MOTIONS, FIREBALL PHILADELPHIA, LONELY ELEPHANT, MALLRATS UNITED; Documentary: UNITED PILOT, WEDDING APOLLO; Drama: CHITTY LOCK, DALMATIONS SWEDEN, PATHS CONTROL; Foreign: INTRIGUE WORST, TOWN ARK; Games: LAMBS CINCINATTI, STAMPEDE DISTURBING; Horror: CARRIE BUNCH, ELEPHANT TROJAN; Music: ALASKA PHANTOM, JAWBREAKER BROOKLYN, YOUTH KICK; Sci-Fi: METROPOLIS COMA, STALLION SUNDANCE; Sports: ALADDIN CALENDAR, DUDE BLINDNESS; Travel: SHAWSHANK BUBBLE, WORKING MICROCOSMOS                                                  |
+|       38 | TOM        | MCKELLEN     | Action: CADDYSHACK JEDI, KISSING DOLLS, SHRUNK DIVINE; Animation: CLUB GRAFFITI, DESIRE ALIEN, DONNIE ALLEY, MISSION ZOOLANDER; Children: IDOLS SNATCHERS, MAGIC MALLRATS, STRANGER STRANGERS; Comedy:FREEDOM CLEOPATRA; Documentary: EGG IGBY; Drama: NECKLACE OUTBREAK, SPICE SORORITY; Family: INDIAN LOVE; Foreign: GENTLEMEN STAGE, PURPLE MOVIE; Horror: ANALYZE HOOSIERS, TARZAN VIDEOTAPE; Music: LEGEND JEDI; New: IDAHO LOVE; Sci-Fi: FRISCO FORREST, STALLION SUNDANCE; Sports: CONGENIALITY QUEST, NEIGHBORS CHARADE                                                                    |
+|       39 | GOLDIE     | BRODY        | Animation: INCH JET, PRIDE ALAMO, PUNK DIVORCE; Children: COMANCHEROS ENEMY; Classics: HOLY TADPOLE, SNATCHERS MONTEZUMA; Documentary: MOD SECRETARY; Drama: PITY BOUND, SEA VIRGIN; Family: BILKO ANONYMOUS, JASON TRAP, PRIX UNDEFEATED, ROBBERY BRIGHT; Foreign: EVERYONE CRAFT, HOOSIERS BIRDCAGE, POLLOCK DELIVERANCE; Horror: DESERT POSEIDON, HIGH ENCINO; New: FLAMINGOS CONNECTICUT, UNBREAKABLE KARATE; Sci-Fi: BINGO TALENTED, DAISY MENAGERIE, MARRIED GO, SPIRITED CASUALTIES; Sports: EXORCIST STING, MOSQUITO ARMAGEDDON, MUMMY CREATURES; Travel: OUTLAW HANKY                                                                    |
+|       40 | JOHNNY     | CAGE         | Action: SUSPECTS QUILLS; Animation: DESIRE ALIEN, FLYING HOOK, THIEF PELICAN; Classics: ROOTS REMEMBER; Comedy: RUSHMORE MERMAID, VELVET TERMINATOR; Documentary: ACADEMY DINOSAUR, INTOLERABLE INTENTIONS; Drama: BUNCH MINDS, HANGING DEEP, LIES TREATMENT; Foreign: ALAMO VIDEOTAPE, CATCH AMISTAD; Games: ROXANNE REBEL, SPY MILE; Horror: ARABIA DOGMA, KARATE MOON, ROCK INSTINCT, SIMON NORTH; New: CLYDE THEORY, VAMPIRE WHALE; Sci-Fi: CONNECTICUT TRAMP, GRAFFITI LOVE, HAMLET WISDOM, REIGN GENTLEMEN; Sports: INSTINCT AIRPORT; Travel: DISCIPLE MOTHER, SUPERFLY TRIP                                                                    |
+|       41 | JODIE      | DEGENERES    | Action: CROW GREASE, DARN FORRESTER, DREAM PICKUP; Classics: BEAST HUNCHBACK, DRACULA CRYSTAL; Comedy: CLOSER BANG, PARADISE SABRINA; Documentary: CIDER DESIRE, FRENCH HOLIDAY, MADISON TRAP; Drama: DIARY PANIC, VIETNAM SMOOCHY; Family: REMEMBER DIARY; Foreign: BROOKLYN DESERT, PET HAUNTING; Games: MOONSHINE CABIN; Horror: AFFAIR PREJUDICE, SIMON NORTH; Music: BOOGIE AMELIE, REDS POCUS; New: FATAL HAUNTED; Sci-Fi: BEVERLY OUTLAW, DAISYMENAGERIE, TROJAN TOMORROW; Sports: GROOVE FICTION, PICKUP DRIVING, SENSE GREEK; Travel: SHANGHAI TYCOON, TOMATOES HELLFIGHTERS                                                                    |
+|       42 | TOM        | MIRANDA      | Animation: SUNRISE LEAGUE; Children: LABYRINTH LEAGUE; Comedy: KNOCK WARLOCK, MEMENTO ZOOLANDER, VALLEY PACKER; Documentary: POCUS PULP, RAINBOW SHOCK; Drama: TRANSLATION SUMMER; Family: CHASING FIGHT, FEUD FROGMEN, SUPER WYOMING; Foreign: KISS GLORY, ROCKETEER MOTHER; Games: MADRE GABLES, SUIT WALLS; Horror: ANALYZEHOOSIERS, LOLA AGENT, LOVE SUICIDES, PATTON INTERVIEW, TARZAN VIDEOTAPE, UNDEFEATED DALMATIONS; Music: FREAKY POCUS, PERSONAL LADYBUGS; New: FLAMINGOS CONNECTICUT; Sci-Fi: SILVERADO GOLDFINGER; Sports: TIGHTS DAWN; Travel: OUTLAW HANKY                                                                    |
+|       43 | KIRK       | JOVOVICH     | Action: AMADEUS HOLY, BAREFOOT MANCHURIAN, BULL SHAWSHANK; Animation: BORROWERS BEDAZZLED, DOGMA FAMILY, FORRESTER COMANCHEROS; Children: FURY MURDER, MURDER ANTITRUST, SPLENDOR PATTON; Classics: CONSPIRACY SPIRIT; Comedy: ELEMENT FREDDY, HEAVEN FREEDOM; Drama: SPICE SORORITY, WARDROBE PHANTOM; Family: CHOCOLAT HARRY, GLADIATOR WESTWARD, GREASE YOUTH, NETWORK PEAK, RUSH GOODFELLAS; Foreign: LOST BIRD, MULHOLLAND BEAST; Music: CLUE GRAIL, INSIDER ARIZONA; Sports: ARTIST COLDBLOODED, MOSQUITO ARMAGEDDON, TUXEDO MILE                                                                    |
+|       44 | NICK       | STALLONE     | Action: SPEAKEASY DATE, WOMEN DORADO; Children: TEQUILA PAST, TOOTSIE PILOT; Comedy: DOOM DANCING, MULAN MOON; Documentary: BEACH HEARTBREAKERS, WAGON JAWS; Drama: VIRGIN DAISY; Family: BRAVEHEART HUMAN, EFFECT GLADIATOR; Games: MONSOON CAUSE, PRIVATE DROP; Horror: STRANGERS GRAFFITI, ZHIVAGO CORE; New: BUTTERFLY CHOCOLAT, JUMANJI BLADE, RUNAWAY TENENBAUMS, VARSITY TRIP; Sports: CONGENIALITY QUEST, FLATLINERS KILLER, HOLES BRANNIGAN, MOSQUITO ARMAGEDDON, TALENTED HOMICIDE, TRADING PINOCCHIO; Travel: BOILED DARES, BORN SPINAL, HORROR REIGN, SHANGHAI TYCOON, TEEN APOLLO                                                                    |
+|       45 | REESE      | KILMER       | Action: CAMPUS REMEMBER; Animation: ALTER VICTORY, FORRESTER COMANCHEROS, TRACY CIDER; Children: BENEATH RUSH; Classics: JERK PAYCHECK, LOVER TRUMAN, TOMORROW HUSTLER; Comedy: KNOCK WARLOCK, PINOCCHIO SIMON, WISDOM WORKER; Documentary: COAST RAINBOW, DEEP CRUSADE, HAWK CHILL, UNITED PILOT; Family: SECRETS PARADISE, SLUMS DUCK, WILLOW TRACY; Foreign: CRYSTAL BREAKING, HIGHBALL POTTER, INTRIGUE WORST, TOWN ARK; Games: CANDLES GRAPES, LAMBS CINCINATTI; Horror: BEHAVIOR RUNAWAY; Music: SCALAWAG DUCK, SILENCE KANE; New: UNBREAKABLE KARATE; Sci-Fi: RANDOM GO; Sports: CRANES RESERVOIR, INSTINCT AIRPORT, KRAMER CHOCOLATE                                                                    |
+|       46 | PARKER     | GOLDBERG     | Action: ARK RIDGEMONT, WORST BANGER; Animation: INCH JET, SONS INTERVIEW; Children: SCARFACE BANG, TIES HUNGER; Classics: RIGHT CRANES; Comedy: JAWS HARRY; Documentary: HAWK CHILL; Drama: SAVANNAH TOWN; Family: SPINAL ROCKY; Foreign: MEET CHOCOLATE; Horror: SPIRIT FLINTSTONES; Music: BALLOON HOMEWARD, CONFIDENTIAL INTERVIEW, LUCKY FLYING, WIZARD COLDBLOODED; New: IDAHO LOVE, LOVERBOY ATTACKS; Sci-Fi: EXPRESS LONELY, FISH OPUS; Sports:DRIVER ANNIE, INSTINCT AIRPORT, SQUAD FISH                                                                    |
+|       47 | JULIA      | BARRYMORE    | Action: BERETS AGENT; Animation: ARGONAUTS TOWN; Classics: JERK PAYCHECK; Comedy: GROUNDHOG UNCUT; Documentary: MIGHTY LUCK, PELICAN COMFORTS, ROAD ROXANNE, WIFE TURN; Drama: CONEHEADS SMOOCHY, SHOOTIST SUPERFLY, UNFAITHFUL KILL, VIRGIN DAISY; Family: BANG KWAI, EFFECT GLADIATOR; Foreign: SCISSORHANDS SLUMS; Games: LAMBS CINCINATTI; Horror: GASLIGHT CRUSADE, ROCK INSTINCT; New: ANGELS LIFE, TROOPERS METAL; Sci-Fi: UNFORGIVEN ZOOLANDER; Sports: SECRETARY ROUGE; Travel: DISCIPLE MOTHER, SHINING ROSES                                                                    |
+|       48 | FRANCES    | DAY-LEWIS    | Action: ENTRAPMENT SATISFACTION; Animation: CHAMPION FLATLINERS, DOUBLE WRATH,GANGS PRIDE; Comedy: BRINGING HYSTERICAL; Documentary: BROTHERHOOD BLANKET, CIDER DESIRE, COAST RAINBOW, EXPENDABLE STALLION, SAGEBRUSH CLUELESS, UNTOUCHABLES SUNRISE; Family: FINDING ANACONDA, GABLES METROPOLIS, HOMICIDE PEACH; Foreign: MADNESS ATTACKS, PURPLE MOVIE, SHREK LICENSE; Games: DARLING BREAKING; Horror: LADY STAGE, UNDEFEATED DALMATIONS; New: EAGLES PANKY; Sci-Fi: FIDDLER LOST, MARRIED GO; Sports: MERMAID INSECTS, MOTHER OLEANDER; Travel: OTHERS SOUP                                                                    |
+|       49 | ANNE       | CRONYN       | Action: DRAGON SQUAD, LUST LOCK, MINDS TRUMAN, UPRISING UPTOWN; Animation: HORN WORKING; Children: HOLLYWOOD ANONYMOUS; Classics: IRON MOON, REQUIEM TYCOON; Documentary: HARDLY ROBBERS, HAWK CHILL; Drama: ENCOUNTERS CURTAIN, PATHS CONTROL, RACER EGG; Family: APACHE DIVINE, GANDHI KWAI, HALF OUTFIELD; Foreign: DANGEROUS UPTOWN, MOON BUNCH; Horror: LADY STAGE, REAP UNFAITHFUL; Music: WIZARD COLDBLOODED; New: MANNEQUIN WORST; Sci-Fi: CINCINATTI WHISPERER, CROWDS TELEMARK; Sports: RIDER CADDYSHACK; Travel: SMILE EARRING, WINDOW SIDE                                                                    |
+|       50 | NATALIE    | HOPKINS      | Action: CADDYSHACK JEDI, FANTASY TROOPERS, FOOL MOCKINGBIRD, HILLS NEIGHBORS, REAR TRADING, RINGS HEARTBREAKERS; Animation: DOORS PRESIDENT; Children: TWISTED PIRATES; Comedy: CONNECTION MICROCOSMOS, PERFECT GROOVE; Documentary: DOZEN LION, EGG IGBY, MAJESTIC FLOATS; Drama: HAROLD FRENCH, KWAI HOMEWARD, TORQUE BOUND;Family: HOUSE DYNAMITE, JASON TRAP, NETWORK PEAK, SIEGE MADRE, SPINAL ROCKY; Foreign: WAR NOTTING; Games: FEATHERS METAL, MONSOON CAUSE, STAMPEDE DISTURBING; New: NUTS TIES; Sci-Fi: LICENSE WEEKEND, UNFORGIVEN ZOOLANDER; Sports: GRACELAND DYNAMITE, HOLES BRANNIGAN; Travel: ESCAPE METROPOLIS, OTHERS SOUP                                                                    |
++----------+------------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+50 rows in set (0.88 sec)
+
+mysql> desc actor_info;
++------------+-------------------+------+-----+---------+-------+
+| Field      | Type              | Null | Key | Default | Extra |
++------------+-------------------+------+-----+---------+-------+
+| actor_id   | smallint unsigned | NO   |     | 0       |       |
+| first_name | varchar(45)       | NO   |     | NULL    |       |
+| last_name  | varchar(45)       | NO   |     | NULL    |       |
+| film_info  | text              | YES  |     | NULL    |       |
++------------+-------------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc film;
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field                | Type                                                                | Null | Key | Default      | Extra                                         |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| film_id              | smallint unsigned                                                   | NO   | PRI | NULL      | auto_increment                                |
+| title                | varchar(128)                                                        | NO   | MUL | NULL      |                                               |
+| description          | text                                                                | YES  |     | NULL      |                                               |
+| release_year         | year                                                                | YES  |     | NULL      |                                               |
+| language_id          | tinyint unsigned                                                    | NO   | MUL | NULL      |                                               |
+| original_language_id | tinyint unsigned                                                    | YES  | MUL | NULL      |                                               |
+| rental_duration      | tinyint unsigned                                                    | NO   |     | 3      |                                               |
+| rental_rate          | decimal(4,2)                                                        | NO   |     | 4.99      |                                               |
+| length               | smallint unsigned                                                   | YES  |     | NULL      |                                               |
+| replacement_cost     | decimal(5,2)                                                        | NO   |     | 19.99      |                                               |
+| rating               | enum('G','PG','PG-13','R','NC-17')                                  | YES  |     | G      |                                               |
+| special_features     | set('Trailers','Commentaries','Deleted Scenes','Behind the Scenes') | YES  |     | NULL      |                                               |
+| last_update          | timestamp                                                           | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+13 rows in set (0.00 sec)
+
+mysql> desc language;
++-------------+------------------+------+-----+-------------------+-----------------------------------------------+
+| Field       | Type             | Null | Key | Default           | Extra                                         |
++-------------+------------------+------+-----+-------------------+-----------------------------------------------+
+| language_id | tinyint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| name        | char(20)         | NO   |     | NULL              |                                               |
+| last_update | timestamp        | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++-------------+------------------+------+-----+-------------------+-----------------------------------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT B.FIRST_NAME, B.LAST_NAME, C.NAME, A.TITLE
+    -> FROM FILM A
+    -> INNER JOIN LANGUAGE C ON A.LANGUAGE_ID = C.LANGUAGE_ID
+    -> LIMIT 50;
+ERROR 1054 (42S22): Unknown column 'B.FIRST_NAME' in 'field list'
+mysql>
