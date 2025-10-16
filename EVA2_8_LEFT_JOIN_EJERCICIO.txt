@@ -1,0 +1,1805 @@
+Microsoft Windows [Versión 10.0.22621.4317]
+(c) Microsoft Corporation. Todos los derechos reservados.
+
+C:\Users\bryan>cd C:\Program Files\MySQL\MySQL Workbench 8.0
+
+C:\Program Files\MySQL\MySQL Workbench 8.0>mysql --local-infile=1 -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 15
+Server version: 8.0.43 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use sakila;
+Database changed
+mysql> desc rental;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| rental_id    | int                | NO   | PRI | NULL              | auto_increment                                |
+| rental_date  | datetime           | NO   | MUL | NULL              |                                               |
+| inventory_id | mediumint unsigned | NO   | MUL | NULL              |                                               |
+| customer_id  | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| return_date  | datetime           | YES  |     | NULL              |                                               |
+| staff_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.00 sec)
+
+mysql> select first_name, last_name
+    -> from customer where
+    -> customer_id not in (
+    -> select distinct customer_id
+    -> from rental);
+Empty set (0.01 sec)
+
+mysql> select a.first_name, a.last_name,
+    -> count (*) as total
+    -> from customer a
+    -> inner join rental b
+    -> on a.customer_id = b.customer_id
+    -> group by a.customer_id
+    -> order by last_name, first_name
+    -> limit 100;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '*) as total
+from customer a
+inner join rental b
+on a.customer_id = b.customer_id' at line 2
+mysql>  select a.first_name, a.last_name,
+    ->     -> count (*) as total
+    ->     -> from customer a
+    ->     -> inner join rental b
+    ->     -> on a.customer_id = b.customer_id
+    ->     -> group by a.customer_id
+    ->     -> order by last_name, first_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> count (*) as total
+    -> from customer a
+    -> inner join rental b
+    -> o' at line 2
+mysql> select a.first_name, a.last_name,
+    ->     -> count(*) as total
+    ->     -> from customer a
+    ->     -> inner join rental b
+    ->     -> on a.customer_id = b.customer_id
+    ->     -> group by a.customer_id
+    ->     -> order by last_name, first_name
+    ->     -> limit 100;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> count(*) as total
+    -> from customer a
+    -> inner join rental b
+    -> on' at line 2
+mysql> select a.first_name, a.last_name,
+    ->     -> count(*) as total
+    ->     -> from customer a
+    ->     -> left join rental b
+    ->     -> on a.customer_id = b.customer_id
+    ->     -> group by a.customer_id
+    ->     -> order by last_name, first_name
+    -> ^C
+mysql> ^C
+mysql> select a.first_name, a.last_name,
+    ->     -> count(*) as total
+    ->     -> from customer a
+    ->     -> left join rental b
+    ->     -> on a.customer_id = b.customer_id
+    ->     -> group by a.customer_id
+    ->     -> order by last_name, first_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> count(*) as total
+    -> from customer a
+    -> left join rental b
+    -> on ' at line 2
+mysql> show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.00 sec)
+
+mysql> select a.first_name, a.last_name,
+    ->     -> count(*) as total
+    ->     -> from customer a
+    ->     -> left join rental b
+    ->     -> on a.customer_id = b.customer_id
+    ->     -> group by a.customer_id
+    ->     -> order by last_name, first_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> count(*) as total
+    -> from customer a
+    -> left join rental b
+    -> on ' at line 2
+mysql> desc customer;
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| Field       | Type              | Null | Key | Default           | Extra                                         |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| customer_id | smallint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| store_id    | tinyint unsigned  | NO   | MUL | NULL              |                                               |
+| first_name  | varchar(45)       | NO   |     | NULL              |                                               |
+| last_name   | varchar(45)       | NO   | MUL | NULL              |                                               |
+| email       | varchar(50)       | YES  |     | NULL              |                                               |
+| address_id  | smallint unsigned | NO   | MUL | NULL              |                                               |
+| active      | tinyint(1)        | NO   |     | 1                 |                                               |
+| create_date | datetime          | NO   |     | NULL              |                                               |
+| last_update | timestamp         | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+9 rows in set (0.00 sec)
+
+mysql> desc rental;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| rental_id    | int                | NO   | PRI | NULL              | auto_increment                                |
+| rental_date  | datetime           | NO   | MUL | NULL              |                                               |
+| inventory_id | mediumint unsigned | NO   | MUL | NULL              |                                               |
+| customer_id  | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| return_date  | datetime           | YES  |     | NULL              |                                               |
+| staff_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.00 sec)
+
+mysql> select a.first_name, a.last_name,
+    ->     -> count(*) as total
+    ->     -> from customer a
+    ->     -> left join rental b
+    ->     -> on a.customer_id = b.customer_id
+    ->     -> group by a.customer_id
+    ->     -> order by last_name, first_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> count(*) as total
+    -> from customer a
+    -> left join rental b
+    -> on ' at line 2
+mysql> select a.first_name, a.last_name, count(b.rental_id) as total
+    ->     -> from customer a
+    ->     -> left join rental b
+    ->     -> on a.customer_id = b.customer_id
+    ->     -> group by a.customer_id
+    ->     -> order by last_name, first_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> from customer a
+    -> left join rental b
+    -> on a.customer_id = b.custome' at line 2
+mysql> select a.first_name, a.last_name, count(b.rental_id) as total
+    -> from customer a
+    -> left join rental b
+    -> on a.customer_id = b.customer_id
+    -> group by a.customer_id
+    -> order by last_name, first_name;
++-------------+--------------+-------+
+| first_name  | last_name    | total |
++-------------+--------------+-------+
+| RAFAEL      | ABNEY        |    21 |
+| NATHANIEL   | ADAM         |    28 |
+| KATHLEEN    | ADAMS        |    27 |
+| DIANA       | ALEXANDER    |    27 |
+| GORDON      | ALLARD       |    32 |
+| SHIRLEY     | ALLEN        |    31 |
+| CHARLENE    | ALVAREZ      |    27 |
+| LISA        | ANDERSON     |    24 |
+| JOSE        | ANDREW       |    25 |
+| IDA         | ANDREWS      |    23 |
+| OSCAR       | AQUINO       |    20 |
+| HARRY       | ARCE         |    35 |
+| JORDAN      | ARCHULETA    |    30 |
+| MELANIE     | ARMSTRONG    |    25 |
+| BEATRICE    | ARNOLD       |    26 |
+| KENT        | ARSENAULT    |    27 |
+| CARL        | ARTIS        |    23 |
+| DARRYL      | ASHCRAFT     |    23 |
+| TYRONE      | ASHER        |    24 |
+| ALMA        | AUSTIN       |    35 |
+| MILDRED     | BAILEY       |    25 |
+| PAMELA      | BAKER        |    23 |
+| MARTIN      | BALES        |    27 |
+| EVERETT     | BANDA        |    28 |
+| JESSIE      | BANKS        |    26 |
+| CLAYTON     | BARBEE       |    26 |
+| ANGEL       | BARCLAY      |    32 |
+| NICHOLAS    | BARFIELD     |    32 |
+| VICTOR      | BARKLEY      |    24 |
+| RACHEL      | BARNES       |    22 |
+| CAROLE      | BARNETT      |    30 |
+| TRACEY      | BARRETT      |    27 |
+| DAISY       | BATES        |    38 |
+| EDWARD      | BAUGH        |    28 |
+| ROBERT      | BAUGHMAN     |    21 |
+| JEAN        | BELL         |    27 |
+| CHESTER     | BENNER       |    24 |
+| JANE        | BENNETT      |    28 |
+| REGINA      | BERRY        |    34 |
+| CHARLIE     | BESS         |    26 |
+| MIGUEL      | BETANCOURT   |    29 |
+| HENRY       | BILLINGSLEY  |    18 |
+| AGNES       | BISHOP       |    23 |
+| VALERIE     | BLACK        |    26 |
+| DEREK       | BLAKELY      |    28 |
+| MATHEW      | BOLIN        |    22 |
+| DON         | BONE         |    25 |
+| LEON        | BOSTIC       |    25 |
+| BOBBY       | BOUDREAU     |    35 |
+| DERRICK     | BOURQUE      |    22 |
+| CLIFFORD    | BOWENS       |    29 |
+| CAROLINE    | BOWMAN       |    15 |
+| BYRON       | BOX          |    29 |
+| EMMA        | BOYD         |    23 |
+| ANA         | BRADLEY      |    34 |
+| TED         | BREAUX       |    29 |
+| VICKIE      | BREWER       |    31 |
+| RUSSELL     | BRINSON      |    36 |
+| BEVERLY     | BROOKS       |    24 |
+| CHRIS       | BROTHERS     |    22 |
+| ELIZABETH   | BROWN        |    38 |
+| GUY         | BROWNLEE     |    32 |
+| PAULA       | BRYANT       |    18 |
+| CLINTON     | BUFORD       |    25 |
+| WESLEY      | BULL         |    40 |
+| TIMOTHY     | BUNN         |    22 |
+| EDWIN       | BURK         |    23 |
+| LYDIA       | BURKE        |    24 |
+| SIDNEY      | BURLESON     |    25 |
+| APRIL       | BURNS        |    26 |
+| COLLEEN     | BURTON       |    24 |
+| LEROY       | BUSTAMANTE   |    32 |
+| LOIS        | BUTLER       |    35 |
+| ALLEN       | BUTTERFIELD  |    21 |
+| DEANNA      | BYRD         |    26 |
+| DANIEL      | CABRAL       |    20 |
+| KAY         | CALDWELL     |    20 |
+| CATHERINE   | CAMPBELL     |    34 |
+| CHAD        | CARBONE      |    25 |
+| TERRY       | CARLSON      |    29 |
+| LORETTA     | CARPENTER    |    22 |
+| EILEEN      | CARR         |    18 |
+| TONY        | CARRANZA     |    21 |
+| JUNE        | CARROLL      |    37 |
+| AMANDA      | CARTER       |    27 |
+| TIM         | CARY         |    39 |
+| ALFRED      | CASILLAS     |    26 |
+| GERTRUDE    | CASTILLO     |    34 |
+| JENNY       | CASTRO       |    27 |
+| PHILIP      | CAUSEY       |    31 |
+| KRISTINA    | CHAMBERS     |    28 |
+| VERNON      | CHAPA        |    18 |
+| TONYA       | CHAPMAN      |    32 |
+| KRISTEN     | CHAVEZ       |    18 |
+| MARIO       | CHEATHAM     |    28 |
+| PEDRO       | CHESTNUT     |    24 |
+| JOHNNIE     | CHISHOLM     |    24 |
+| RAMON       | CHOATE       |    31 |
+| NELSON      | CHRISTENSON  |    20 |
+| FERNANDO    | CHURCHILL    |    25 |
+| AUSTIN      | CINTRON      |    19 |
+| MICHELLE    | CLARK        |    35 |
+| ADRIAN      | CLARY        |    19 |
+| BERNARD     | COLBY        |    22 |
+| TRACY       | COLE         |    30 |
+| KATHRYN     | COLEMAN      |    26 |
+| TOMMY       | COLLAZO      |    38 |
+| DIANE       | COLLINS      |    35 |
+| GLORIA      | COOK         |    30 |
+| JOAN        | COOPER       |    23 |
+| ALLAN       | CORNISH      |    19 |
+| BRETT       | CORNWELL     |    34 |
+| CARLOS      | COUGHLIN     |    23 |
+| JUDITH      | COX          |    33 |
+| GARY        | COY          |    25 |
+| BOBBIE      | CRAIG        |    24 |
+| ESTHER      | CRAWFORD     |    28 |
+| MAURICE     | CRAWLEY      |    29 |
+| IVAN        | CROMWELL     |    26 |
+| ALBERT      | CROUSE       |    23 |
+| KIM         | CRUZ         |    21 |
+| THEODORE    | CULP         |    31 |
+| EUGENE      | CULPEPPER    |    19 |
+| STACY       | CUNNINGHAM   |    23 |
+| STEVEN      | CURLEY       |    29 |
+| NORMAN      | CURRIER      |    26 |
+| LEAH        | CURTIS       |    25 |
+| DANIELLE    | DANIELS      |    25 |
+| PATSY       | DAVIDSON     |    28 |
+| JENNIFER    | DAVIS        |    28 |
+| COURTNEY    | DAY          |    32 |
+| MARCIA      | DEAN         |    42 |
+| ALVIN       | DELOACH      |    29 |
+| RON         | DELUCA       |    23 |
+| WADE        | DELVALLE     |    22 |
+| HERMAN      | DEVORE       |    29 |
+| EMILY       | DIAZ         |    24 |
+| AMBER       | DIXON        |    27 |
+| MARSHA      | DOUGLAS      |    37 |
+| SEAN        | DOUGLASS     |    23 |
+| LLOYD       | DOWD         |    19 |
+| FREDDIE     | DUGGAN       |    25 |
+| SAMANTHA    | DUNCAN       |    23 |
+| ERIN        | DUNN         |    27 |
+| JEFF        | EAST         |    30 |
+| BEN         | EASTER       |    26 |
+| LEO         | EBERT        |    23 |
+| JOYCE       | EDWARDS      |    28 |
+| JIMMIE      | EGGLESTON    |    28 |
+| MELVIN      | ELLINGTON    |    26 |
+| KATIE       | ELLIOTT      |    25 |
+| GRACE       | ELLIS        |    33 |
+| JAVIER      | ELROD        |    32 |
+| JARED       | ELY          |    19 |
+| KURT        | EMMONS       |    23 |
+| TRAVIS      | ESTEP        |    25 |
+| ANN         | EVANS        |    17 |
+| JOHN        | FARNSWORTH   |    31 |
+| ALEXANDER   | FENNELL      |    36 |
+| BERTHA      | FERGUSON     |    25 |
+| MELINDA     | FERNANDEZ    |    17 |
+| VICKI       | FIELDS       |    25 |
+| CINDY       | FISHER       |    29 |
+| MYRTLE      | FLEMING      |    24 |
+| MAE         | FLETCHER     |    31 |
+| JULIA       | FLORES       |    32 |
+| CRYSTAL     | FORD         |    33 |
+| MICHEAL     | FORMAN       |    26 |
+| ENRIQUE     | FORSYTHE     |    28 |
+| RAUL        | FORTIER      |    20 |
+| HOWARD      | FORTNER      |    26 |
+| PHYLLIS     | FOSTER       |    23 |
+| JACK        | FOUST        |    24 |
+| JO          | FOWLER       |    20 |
+| HOLLY       | FOX          |    31 |
+| JUAN        | FRALEY       |    23 |
+| JOEL        | FRANCISCO    |    23 |
+| BETH        | FRANKLIN     |    25 |
+| GLENDA      | FRAZIER      |    32 |
+| SHANNON     | FREEMAN      |    24 |
+| CLAUDIA     | FULLER       |    26 |
+| GERALD      | FULTZ        |    30 |
+| FELIX       | GAFFNEY      |    24 |
+| RANDY       | GAITHER      |    28 |
+| CLARENCE    | GAMEZ        |    30 |
+| FLOYD       | GANDY        |    17 |
+| JAMES       | GANNON       |    30 |
+| CAROL       | GARCIA       |    22 |
+| DAVE        | GARDINER     |    32 |
+| JOANN       | GARDNER      |    16 |
+| NELLIE      | GARRETT      |    21 |
+| PEARL       | GARZA        |    22 |
+| BILL        | GAVIN        |    28 |
+| RUBEN       | GEARY        |    21 |
+| JOY         | GEORGE       |    33 |
+| VICTORIA    | GIBSON       |    27 |
+| TANYA       | GILBERT      |    33 |
+| DUSTIN      | GILLETTE     |    26 |
+| JOE         | GILLILAND    |    29 |
+| DENNIS      | GILMAN       |    28 |
+| JOSEPHINE   | GOMEZ        |    26 |
+| NORMA       | GONZALES     |    21 |
+| MARTHA      | GONZALEZ     |    34 |
+| ADAM        | GOOCH        |    22 |
+| KENNETH     | GOODEN       |    17 |
+| LESLIE      | GORDON       |    22 |
+| DOUGLAS     | GRAF         |    25 |
+| RITA        | GRAHAM       |    24 |
+| MICHELE     | GRANT        |    30 |
+| BRANDY      | GRAVES       |    28 |
+| JUDY        | GRAY         |    25 |
+| CHRISTOPHER | GRECO        |    31 |
+| VIRGINIA    | GREEN        |    32 |
+| JEANETTE    | GREENE       |    20 |
+| SONIA       | GREGORY      |    28 |
+| ALEX        | GRESHAM      |    33 |
+| ROSS        | GREY         |    27 |
+| LILLIAN     | GRIFFIN      |    25 |
+| THOMAS      | GRIGSBY      |    25 |
+| TERRY       | GRISSOM      |    20 |
+| ARMANDO     | GRUBER       |    21 |
+| HARVEY      | GUAJARDO     |    22 |
+| ERIK        | GUILLEN      |    29 |
+| TERRENCE    | GUNDERSON    |    30 |
+| CARLA       | GUTIERREZ    |    26 |
+| RAMONA      | HALE         |    30 |
+| JESSICA     | HALL         |    34 |
+| GLADYS      | HAMILTON     |    31 |
+| SETH        | HANNON       |    25 |
+| DELORES     | HANSEN       |    21 |
+| VIOLA       | HANSON       |    32 |
+| GABRIEL     | HARDER       |    26 |
+| BRYAN       | HARDISON     |    28 |
+| BRENT       | HARKINS      |    23 |
+| ROBERTA     | HARPER       |    23 |
+| HELEN       | HARRIS       |    32 |
+| WENDY       | HARRISON     |    30 |
+| DANA        | HART         |    29 |
+| ARLENE      | HARVEY       |    26 |
+| COREY       | HAUSER       |    22 |
+| ARNOLD      | HAVENS       |    33 |
+| JILL        | HAWKINS      |    21 |
+| LEE         | HAWKS        |    27 |
+| ROBIN       | HAYES        |    24 |
+| SHAWN       | HEATON       |    33 |
+| ANDREA      | HENDERSON    |    22 |
+| ALBERTO     | HENNING      |    21 |
+| PAULINE     | HENRY        |    27 |
+| ANGELA      | HERNANDEZ    |    36 |
+| NORA        | HERRERA      |    28 |
+| TRACY       | HERRMANN     |    28 |
+| CLAUDE      | HERZOG       |    25 |
+| EDUARDO     | HIATT        |    27 |
+| MONICA      | HICKS        |    30 |
+| MARCUS      | HIDALGO      |    30 |
+| ANNA        | HILL         |    21 |
+| ZACHARY     | HITE         |    31 |
+| MATTIE      | HOFFMAN      |    22 |
+| MABEL       | HOLLAND      |    30 |
+| PHILLIP     | HOLM         |    26 |
+| LUCILLE     | HOLMES       |    28 |
+| TONI        | HOLT         |    23 |
+| HILDA       | HOPKINS      |    29 |
+| BILLIE      | HORTON       |    26 |
+| RAY         | HOULE        |    22 |
+| ROSE        | HOWARD       |    22 |
+| WILLIE      | HOWELL       |    26 |
+| MILTON      | HOWLAND      |    25 |
+| LAUREN      | HUDSON       |    20 |
+| BRANDON     | HUEY         |    37 |
+| BONNIE      | HUGHES       |    21 |
+| ELEANOR     | HUNT         |    46 |
+| CHARLOTTE   | HUNTER       |    24 |
+| JEREMY      | HURTADO      |    28 |
+| CURTIS      | IRBY         |    38 |
+| FREDERICK   | ISBELL       |    21 |
+| DANNY       | ISOM         |    21 |
+| KAREN       | JACKSON      |    27 |
+| GEORGIA     | JACOBS       |    26 |
+| KATHY       | JAMES        |    30 |
+| LOUISE      | JENKINS      |    25 |
+| NAOMI       | JENNINGS     |    35 |
+| LENA        | JENSEN       |    32 |
+| OLGA        | JIMENEZ      |    32 |
+| PATRICIA    | JOHNSON      |    27 |
+| KRISTIN     | JOHNSTON     |    31 |
+| BARBARA     | JONES        |    22 |
+| TIFFANY     | JORDAN       |    14 |
+| JERRY       | JORDON       |    29 |
+| JOSEPH      | JOY          |    30 |
+| CHRISTIAN   | JUNG         |    24 |
+| ALAN        | KAHN         |    26 |
+| ELSIE       | KELLEY       |    37 |
+| DENISE      | KELLY        |    27 |
+| RHONDA      | KENNEDY      |    39 |
+| JEROME      | KENYON       |    16 |
+| LILLIE      | KIM          |    23 |
+| REGINALD    | KINDER       |    28 |
+| MELISSA     | KING         |    34 |
+| GAIL        | KNIGHT       |    25 |
+| KELLY       | KNOTT        |    25 |
+| CHARLES     | KOWALSKI     |    32 |
+| LESTER      | KRAUS        |    16 |
+| HERBERT     | KRUGER       |    20 |
+| MISTY       | LAMBERT      |    27 |
+| JACOB       | LANCE        |    21 |
+| RENEE       | LANE         |    26 |
+| HEIDI       | LARSON       |    34 |
+| DARYL       | LARUE        |    27 |
+| LAURIE      | LAWRENCE     |    23 |
+| JEANNE      | LAWSON       |    27 |
+| LAWRENCE    | LAWTON       |    31 |
+| KIMBERLY    | LEE          |    25 |
+| LOUIS       | LEONE        |    35 |
+| SARAH       | LEWIS        |    30 |
+| GEORGE      | LINTON       |    33 |
+| MAUREEN     | LITTLE       |    21 |
+| DWIGHT      | LOMBARDI     |    17 |
+| JACQUELINE  | LONG         |    33 |
+| AMY         | LOPEZ        |    29 |
+| BARRY       | LOVELACE     |    33 |
+| PRISCILLA   | LOWE         |    35 |
+| VELMA       | LUCAS        |    27 |
+| WILLARD     | LUMPKIN      |    22 |
+| LEWIS       | LYMAN        |    19 |
+| JACKIE      | LYNCH        |    25 |
+| STEVE       | MACKENZIE    |    34 |
+| RALPH       | MADRIGAL     |    34 |
+| MATTHEW     | MAHAN        |    31 |
+| DONALD      | MAHON        |    23 |
+| CLIFTON     | MALCOLM      |    27 |
+| JOSHUA      | MARK         |    30 |
+| WILLIE      | MARKHAM      |    25 |
+| SAMUEL      | MARLOW       |    21 |
+| SHERRY      | MARSHALL     |    34 |
+| CALVIN      | MARTEL       |    23 |
+| SANDRA      | MARTIN       |    28 |
+| RUTH        | MARTINEZ     |    24 |
+| HAROLD      | MARTINO      |    32 |
+| JUANITA     | MASON        |    30 |
+| ERICA       | MATTHEWS     |    22 |
+| RICK        | MATTOX       |    27 |
+| GREGORY     | MAULDIN      |    23 |
+| GWENDOLYN   | MAY          |    25 |
+| ALFREDO     | MCADAMS      |    20 |
+| RENE        | MCALISTER    |    26 |
+| MORRIS      | MCCARTER     |    34 |
+| JESUS       | MCCARTNEY    |    24 |
+| VERA        | MCCOY        |    18 |
+| RICHARD     | MCCRARY      |    25 |
+| BRAD        | MCCURDY      |    25 |
+| EDITH       | MCDONALD     |    19 |
+| SAM         | MCDUFFIE     |    24 |
+| MIRIAM      | MCKINNEY     |    26 |
+| RAYMOND     | MCWHORTER    |    30 |
+| RICARDO     | MEADOR       |    21 |
+| DORA        | MEDINA       |    23 |
+| CORY        | MEEHAN       |    24 |
+| ANTONIO     | MEEK         |    16 |
+| CASEY       | MENA         |    34 |
+| PETER       | MENARD       |    23 |
+| MARIAN      | MENDOZA      |    23 |
+| NATALIE     | MEYER        |    23 |
+| JESSIE      | MILAM        |    33 |
+| BECKY       | MILES        |    29 |
+| SHANE       | MILLARD      |    22 |
+| MARIA       | MILLER       |    33 |
+| ALICIA      | MILLS        |    21 |
+| TOM         | MILNER       |    32 |
+| STEPHANIE   | MITCHELL     |    25 |
+| RODNEY      | MOELLER      |    23 |
+| STACEY      | MONTGOMERY   |    34 |
+| MARGARET    | MOORE        |    23 |
+| ANITA       | MORALES      |    15 |
+| STELLA      | MORENO       |    22 |
+| EVELYN      | MORGAN       |    28 |
+| CRAIG       | MORRELL      |    30 |
+| HEATHER     | MORRIS       |    30 |
+| BESSIE      | MORRISON     |    28 |
+| JASON       | MORRISSEY    |    28 |
+| BRADLEY     | MOTLEY       |    27 |
+| CHERYL      | MURPHY       |    27 |
+| THELMA      | MURRAY       |    32 |
+| MANUEL      | MURRELL      |    30 |
+| PEGGY       | MYERS        |    24 |
+| PENNY       | NEAL         |    18 |
+| DEBRA       | NELSON       |    29 |
+| JAIME       | NETTLES      |    29 |
+| RANDALL     | NEUMANN      |    23 |
+| PATRICK     | NEWSOM       |    31 |
+| JUSTIN      | NGO          |    36 |
+| TAMARA      | NGUYEN       |    25 |
+| SUZANNE     | NICHOLS      |    24 |
+| ELMER       | NOE          |    26 |
+| JULIO       | NOLAND       |    21 |
+| CODY        | NOLEN        |    22 |
+| LEONA       | OBRIEN       |    14 |
+| MARION      | OCAMPO       |    29 |
+| ISAAC       | OGLESBY      |    29 |
+| JORGE       | OLIVARES     |    34 |
+| ELLA        | OLIVER       |    31 |
+| ANNETTE     | OLSON        |    24 |
+| DWAYNE      | OLVERA       |    22 |
+| SYLVIA      | ORTIZ        |    32 |
+| MARC        | OUTLAW       |    30 |
+| CARMEN      | OWENS        |    26 |
+| DAN         | PAINE        |    22 |
+| MEGAN       | PALMER       |    27 |
+| FRANCES     | PARKER       |    22 |
+| WANDA       | PATTERSON    |    30 |
+| LYNN        | PAYNE        |    28 |
+| IRMA        | PEARSON      |    18 |
+| LANCE       | PEMBERTON    |    22 |
+| ERIKA       | PENA         |    26 |
+| CAROLYN     | PEREZ        |    30 |
+| GERALDINE   | PERKINS      |    30 |
+| SARA        | PERRY        |    33 |
+| WALTER      | PERRYMAN     |    30 |
+| SUE         | PETERS       |    40 |
+| NICOLE      | PETERSON     |    22 |
+| BOB         | PFEIFFER     |    24 |
+| JANET       | PHILLIPS     |    27 |
+| SALLY       | PIERCE       |    32 |
+| JEFFERY     | PINSON       |    31 |
+| MAX         | PITT         |    24 |
+| HECTOR      | POINDEXTER   |    26 |
+| CARRIE      | PORTER       |    34 |
+| BILLY       | POULIN       |    35 |
+| ANNE        | POWELL       |    23 |
+| DARRELL     | POWER        |    25 |
+| KEN         | PREWITT      |    29 |
+| IRENE       | PRICE        |    23 |
+| GLENN       | PULLEN       |    23 |
+| ANDREW      | PURDY        |    27 |
+| STEPHEN     | QUALLS       |    28 |
+| TROY        | QUIGLEY      |    30 |
+| ROGER       | QUINTANILLA  |    36 |
+| VINCENT     | RALSTON      |    25 |
+| CHRISTINA   | RAMIREZ      |    18 |
+| EVA         | RAMOS        |    18 |
+| ANDRE       | RAPP         |    28 |
+| DALE        | RATCLIFF     |    27 |
+| AUDREY      | RAY          |    29 |
+| JIM         | REA          |    33 |
+| DORIS       | REED         |    22 |
+| CONSTANCE   | REID         |    25 |
+| NEIL        | RENNER       |    32 |
+| DEBBIE      | REYES        |    32 |
+| ROSA        | REYNOLDS     |    30 |
+| EDGAR       | RHOADS       |    25 |
+| SHERRI      | RHODES       |    33 |
+| JAMIE       | RICE         |    29 |
+| WILMA       | RICHARDS     |    20 |
+| ASHLEY      | RICHARDSON   |    25 |
+| RONNIE      | RICKETTS     |    25 |
+| KEITH       | RICO         |    26 |
+| BRITTANY    | RILEY        |    28 |
+| MARK        | RINEHART     |    26 |
+| KATHERINE   | RIVERA       |    14 |
+| JAY         | ROBB         |    26 |
+| ERIC        | ROBERT       |    27 |
+| CHRISTINE   | ROBERTS      |    24 |
+| JOANNE      | ROBERTSON    |    34 |
+| GREG        | ROBINS       |    30 |
+| SHARON      | ROBINSON     |    30 |
+| LAURA       | RODRIGUEZ    |    22 |
+| VIOLET      | RODRIQUEZ    |    30 |
+| TERESA      | ROGERS       |    29 |
+| MINNIE      | ROMERO       |    34 |
+| DARLENE     | ROSE         |    31 |
+| MARILYN     | ROSS         |    30 |
+| TERRANCE    | ROUSH        |    29 |
+| DAVID       | ROYAL        |    26 |
+| VIVIAN      | RUIZ         |    23 |
+| NATHAN      | RUNYON       |    32 |
+| ANNIE       | RUSSELL      |    18 |
+| TARA        | RYAN         |    20 |
+| RYAN        | SALISBURY    |    30 |
+| GENE        | SANBORN      |    27 |
+| JULIE       | SANCHEZ      |    29 |
+| TAMMY       | SANDERS      |    41 |
+| WILLIAM     | SATTERFIELD  |    26 |
+| DEAN        | SAUER        |    27 |
+| JONATHAN    | SCARBOROUGH  |    18 |
+| JESSE       | SCHILLING    |    26 |
+| ROSEMARY    | SCHMIDT      |    35 |
+| LEONARD     | SCHOFIELD    |    32 |
+| JIMMY       | SCHRADER     |    29 |
+| KEVIN       | SCHULER      |    22 |
+| ANTHONY     | SCHWAB       |    20 |
+| BRUCE       | SCHWARZ      |    23 |
+| REBECCA     | SCOTT        |    24 |
+| STANLEY     | SCROGGINS    |    30 |
+| KARL        | SEAL         |    45 |
+| AARON       | SELBY        |    24 |
+| LESLIE      | SEWARD       |    35 |
+| EARL        | SHANKS       |    27 |
+| CLARA       | SHAW         |    42 |
+| RICKY       | SHELBY       |    25 |
+| SCOTT       | SHELLEY      |    25 |
+| DIANNE      | SHELTON      |    31 |
+| WARREN      | SHERROD      |    33 |
+| FRANCIS     | SIKES        |    26 |
+| MAXINE      | SILVA        |    32 |
+| MICHAEL     | SILVERMAN    |    29 |
+| TINA        | SIMMONS      |    28 |
+| ARTHUR      | SIMPKINS     |    32 |
+| ELLEN       | SIMPSON      |    28 |
+| VANESSA     | SIMS         |    19 |
+| FRANCISCO   | SKIDMORE     |    22 |
+| GILBERT     | SLEDGE       |    28 |
+| WALLACE     | SLONE        |    25 |
+| MARY        | SMITH        |    32 |
+| MARION      | SNYDER       |    39 |
+| NINA        | SOTO         |    29 |
+| ROLAND      | SOUTH        |    23 |
+| JEFFREY     | SPEAR        |    23 |
+| CATHY       | SPENCER      |    29 |
+| KYLE        | SPURLOCK     |    30 |
+| SERGIO      | STANFIELD    |    26 |
+| ALLISON     | STANLEY      |    27 |
+| KIRK        | STCLAIR      |    19 |
+| LORRAINE    | STEPHENS     |    21 |
+| ERNEST      | STEPP        |    25 |
+| ELAINE      | STEVENS      |    24 |
+| ALICE       | STEWART      |    33 |
+| IAN         | STILL        |    27 |
+| VERONICA    | STONE        |    32 |
+| DAWN        | SULLIVAN     |    26 |
+| FELICIA     | SUTTON       |    28 |
+| PERRY       | SWAFFORD     |    24 |
+| GLEN        | TALBERT      |    26 |
+| TODD        | TAN          |    29 |
+| DOROTHY     | TAYLOR       |    25 |
+| SALVADOR    | TEEL         |    30 |
+| JENNIE      | TERRY        |    29 |
+| NANCY       | THOMAS       |    28 |
+| DONNA       | THOMPSON     |    21 |
+| MARSHALL    | THORN        |    23 |
+| LARRY       | THRASHER     |    26 |
+| LONNIE      | TIRADO       |    18 |
+| CLYDE       | TOBIAS       |    29 |
+| EDDIE       | TOMLIN       |    27 |
+| KELLY       | TORRES       |    22 |
+| PAUL        | TROUT        |    23 |
+| FRANKLIN    | TROUTMAN     |    22 |
+| WAYNE       | TRUONG       |    19 |
+| DUANE       | TUBBS        |    31 |
+| MARJORIE    | TUCKER       |    32 |
+| MARIE       | TURNER       |    26 |
+| JOHNNY      | TURPIN       |    19 |
+| ANDY        | VANHORN      |    25 |
+| CHRISTY     | VARGAS       |    31 |
+| BENJAMIN    | VARNEY       |    23 |
+| TERRI       | VASQUEZ      |    27 |
+| JULIAN      | VEST         |    28 |
+| CECIL       | VINES        |    26 |
+| ROBERTO     | VU           |    30 |
+| MARGIE      | WADE         |    36 |
+| FRANK       | WAGGONER     |    32 |
+| DOLORES     | WAGNER       |    26 |
+| HUGH        | WALDROP      |    21 |
+| DEBORAH     | WALKER       |    29 |
+| CONNIE      | WALLACE      |    23 |
+| CASSANDRA   | WALTERS      |    30 |
+| JANICE      | WARD         |    34 |
+| HAZEL       | WARREN       |    34 |
+| RUBY        | WASHINGTON   |    28 |
+| YVONNE      | WATKINS      |    21 |
+| THERESA     | WATSON       |    30 |
+| SHELLY      | WATTS        |    26 |
+| JAMIE       | WAUGH        |    25 |
+| MIKE        | WAY          |    35 |
+| YOLANDA     | WEAVER       |    27 |
+| ETHEL       | WEBB         |    32 |
+| RONALD      | WEINER       |    30 |
+| MARLENE     | WELCH        |    26 |
+| SHEILA      | WELLS        |    18 |
+| EDNA        | WEST         |    26 |
+| MITCHELL    | WESTMORELAND |    32 |
+| FRED        | WHEAT        |    25 |
+| LUCY        | WHEELER      |    26 |
+| BETTY       | WHITE        |    28 |
+| ROY         | WHITING      |    29 |
+| JON         | WILES        |    24 |
+| LINDA       | WILLIAMS     |    26 |
+| GINA        | WILLIAMSON   |    28 |
+| BERNICE     | WILLIS       |    33 |
+| SUSAN       | WILSON       |    24 |
+| DARREN      | WINDHAM      |    24 |
+| VIRGIL      | WOFFORD      |    27 |
+| LORI        | WOOD         |    31 |
+| FLORENCE    | WOODS        |    30 |
+| TYLER       | WREN         |    21 |
+| BRENDA      | WRIGHT       |    26 |
+| BRIAN       | WYMAN        |    12 |
+| LUIS        | YANEZ        |    20 |
+| MARVIN      | YEE          |    21 |
+| CYNTHIA     | YOUNG        |    32 |
++-------------+--------------+-------+
+599 rows in set (0.01 sec)
+
+mysql> select a.first_name, a.last_name, sum (b.amount) as total
+    -> from customer a
+    -> left join payment b
+    -> on a.customer_id = b.customer_id
+    -> group by a.customer_id
+    -> having total is null
+    -> order by last_name, first_name;
+ERROR 1630 (42000): FUNCTION sakila.sum does not exist. Check the 'Function Name Parsing and Resolution' section in the Reference Manual
+mysql> select a.first_name, a.last_name, sum(b.amount) as total
+    -> from customer a
+    -> left join payment b
+    -> on a.customer_id = b.customer_id
+    -> group by a.customer_id
+    -> order by last_name, first_name;
++-------------+--------------+--------+
+| first_name  | last_name    | total  |
++-------------+--------------+--------+
+| RAFAEL      | ABNEY        |  97.79 |
+| NATHANIEL   | ADAM         | 133.72 |
+| KATHLEEN    | ADAMS        |  92.73 |
+| DIANA       | ALEXANDER    | 105.73 |
+| GORDON      | ALLARD       | 160.68 |
+| SHIRLEY     | ALLEN        | 126.69 |
+| CHARLENE    | ALVAREZ      | 114.73 |
+| LISA        | ANDERSON     | 106.76 |
+| JOSE        | ANDREW       |  96.75 |
+| IDA         | ANDREWS      |  76.77 |
+| OSCAR       | AQUINO       |  99.80 |
+| HARRY       | ARCE         | 157.65 |
+| JORDAN      | ARCHULETA    | 132.70 |
+| MELANIE     | ARMSTRONG    |  92.75 |
+| BEATRICE    | ARNOLD       | 119.74 |
+| KENT        | ARSENAULT    | 134.73 |
+| CARL        | ARTIS        | 106.77 |
+| DARRYL      | ASHCRAFT     |  76.77 |
+| TYRONE      | ASHER        | 112.76 |
+| ALMA        | AUSTIN       | 151.65 |
+| MILDRED     | BAILEY       |  98.75 |
+| PAMELA      | BAKER        |  95.77 |
+| MARTIN      | BALES        | 103.73 |
+| EVERETT     | BANDA        | 110.72 |
+| JESSIE      | BANKS        |  91.74 |
+| CLAYTON     | BARBEE       |  96.74 |
+| ANGEL       | BARCLAY      | 115.68 |
+| NICHOLAS    | BARFIELD     | 145.68 |
+| VICTOR      | BARKLEY      |  91.76 |
+| RACHEL      | BARNES       |  84.78 |
+| CAROLE      | BARNETT      | 108.70 |
+| TRACEY      | BARRETT      | 118.73 |
+| DAISY       | BATES        | 162.62 |
+| EDWARD      | BAUGH        | 114.72 |
+| ROBERT      | BAUGHMAN     |  92.79 |
+| JEAN        | BELL         | 115.73 |
+| CHESTER     | BENNER       |  99.76 |
+| JANE        | BENNETT      | 100.72 |
+| REGINA      | BERRY        | 135.66 |
+| CHARLIE     | BESS         | 120.74 |
+| MIGUEL      | BETANCOURT   | 135.71 |
+| HENRY       | BILLINGSLEY  |  73.82 |
+| AGNES       | BISHOP       |  98.77 |
+| VALERIE     | BLACK        | 121.74 |
+| DEREK       | BLAKELY      |  97.72 |
+| MATHEW      | BOLIN        |  90.78 |
+| DON         | BONE         | 133.75 |
+| LEON        | BOSTIC       | 109.75 |
+| BOBBY       | BOUDREAU     | 106.65 |
+| DERRICK     | BOURQUE      |  95.78 |
+| CLIFFORD    | BOWENS       | 113.71 |
+| CAROLINE    | BOWMAN       |  50.85 |
+| BYRON       | BOX          | 120.71 |
+| EMMA        | BOYD         |  94.77 |
+| ANA         | BRADLEY      | 174.66 |
+| TED         | BREAUX       | 117.71 |
+| VICKIE      | BREWER       | 120.69 |
+| RUSSELL     | BRINSON      | 136.64 |
+| BEVERLY     | BROOKS       |  97.76 |
+| CHRIS       | BROTHERS     |  84.78 |
+| ELIZABETH   | BROWN        | 144.62 |
+| GUY         | BROWNLEE     | 159.68 |
+| PAULA       | BRYANT       |  77.82 |
+| CLINTON     | BUFORD       | 103.75 |
+| WESLEY      | BULL         | 177.60 |
+| TIMOTHY     | BUNN         |  91.78 |
+| EDWIN       | BURK         | 116.77 |
+| LYDIA       | BURKE        |  82.76 |
+| SIDNEY      | BURLESON     | 108.75 |
+| APRIL       | BURNS        |  94.74 |
+| COLLEEN     | BURTON       |  87.76 |
+| LEROY       | BUSTAMANTE   | 118.68 |
+| LOIS        | BUTLER       | 113.65 |
+| ALLEN       | BUTTERFIELD  |  85.79 |
+| DEANNA      | BYRD         | 107.74 |
+| DANIEL      | CABRAL       |  97.80 |
+| KAY         | CALDWELL     |  98.80 |
+| CATHERINE   | CAMPBELL     | 142.66 |
+| CHAD        | CARBONE      |  89.75 |
+| TERRY       | CARLSON      | 127.71 |
+| LORETTA     | CARPENTER    |  93.78 |
+| EILEEN      | CARR         |  80.82 |
+| TONY        | CARRANZA     |  73.79 |
+| JUNE        | CARROLL      | 173.63 |
+| AMANDA      | CARTER       | 110.73 |
+| TIM         | CARY         | 175.61 |
+| ALFRED      | CASILLAS     | 120.74 |
+| GERTRUDE    | CASTILLO     | 137.66 |
+| JENNY       | CASTRO       | 103.73 |
+| PHILIP      | CAUSEY       | 121.69 |
+| KRISTINA    | CHAMBERS     | 109.72 |
+| VERNON      | CHAPA        |  88.82 |
+| TONYA       | CHAPMAN      | 161.68 |
+| KRISTEN     | CHAVEZ       |  87.82 |
+| MARIO       | CHEATHAM     | 112.72 |
+| PEDRO       | CHESTNUT     | 103.76 |
+| JOHNNIE     | CHISHOLM     | 121.76 |
+| RAMON       | CHOATE       | 140.69 |
+| NELSON      | CHRISTENSON  |  77.80 |
+| FERNANDO    | CHURCHILL    | 117.75 |
+| AUSTIN      | CINTRON      |  83.81 |
+| MICHELLE    | CLARK        | 155.65 |
+| ADRIAN      | CLARY        |  74.81 |
+| BERNARD     | COLBY        |  88.78 |
+| TRACY       | COLE         | 132.70 |
+| KATHRYN     | COLEMAN      | 130.74 |
+| TOMMY       | COLLAZO      | 186.62 |
+| DIANE       | COLLINS      | 169.65 |
+| GLORIA      | COOK         | 135.70 |
+| JOAN        | COOPER       |  84.77 |
+| ALLAN       | CORNISH      |  79.81 |
+| BRETT       | CORNWELL     | 138.66 |
+| CARLOS      | COUGHLIN     | 106.77 |
+| JUDITH      | COX          | 100.67 |
+| GARY        | COY          | 103.75 |
+| BOBBIE      | CRAIG        |  80.76 |
+| ESTHER      | CRAWFORD     |  95.72 |
+| MAURICE     | CRAWLEY      | 138.71 |
+| IVAN        | CROMWELL     |  99.74 |
+| ALBERT      | CROUSE       |  99.77 |
+| KIM         | CRUZ         |  82.79 |
+| THEODORE    | CULP         | 116.69 |
+| EUGENE      | CULPEPPER    |  71.81 |
+| STACY       | CUNNINGHAM   |  98.77 |
+| STEVEN      | CURLEY       | 132.71 |
+| NORMAN      | CURRIER      |  80.74 |
+| LEAH        | CURTIS       | 104.75 |
+| DANIELLE    | DANIELS      | 105.75 |
+| PATSY       | DAVIDSON     | 119.72 |
+| JENNIFER    | DAVIS        |  93.72 |
+| COURTNEY    | DAY          | 132.68 |
+| MARCIA      | DEAN         | 175.58 |
+| ALVIN       | DELOACH      | 139.71 |
+| RON         | DELUCA       | 103.77 |
+| WADE        | DELVALLE     |  83.78 |
+| HERMAN      | DEVORE       | 115.71 |
+| EMILY       | DIAZ         |  91.76 |
+| AMBER       | DIXON        | 113.73 |
+| MARSHA      | DOUGLAS      | 151.63 |
+| SEAN        | DOUGLASS     |  91.77 |
+| LLOYD       | DOWD         |  66.81 |
+| FREDDIE     | DUGGAN       |  99.75 |
+| SAMANTHA    | DUNCAN       |  71.77 |
+| ERIN        | DUNN         | 106.73 |
+| JEFF        | EAST         | 107.70 |
+| BEN         | EASTER       | 122.74 |
+| LEO         | EBERT        | 104.77 |
+| JOYCE       | EDWARDS      | 130.72 |
+| JIMMIE      | EGGLESTON    | 135.72 |
+| MELVIN      | ELLINGTON    |  97.74 |
+| KATIE       | ELLIOTT      | 109.75 |
+| GRACE       | ELLIS        | 139.67 |
+| JAVIER      | ELROD        | 135.68 |
+| JARED       | ELY          |  87.81 |
+| KURT        | EMMONS       |  99.77 |
+| TRAVIS      | ESTEP        | 110.75 |
+| ANN         | EVANS        |  76.83 |
+| JOHN        | FARNSWORTH   | 137.69 |
+| ALEXANDER   | FENNELL      | 151.64 |
+| BERTHA      | FERGUSON     | 101.75 |
+| MELINDA     | FERNANDEZ    |  80.83 |
+| VICKI       | FIELDS       | 108.75 |
+| CINDY       | FISHER       | 113.71 |
+| MYRTLE      | FLEMING      | 110.76 |
+| MAE         | FLETCHER     | 158.69 |
+| JULIA       | FLORES       | 134.68 |
+| CRYSTAL     | FORD         | 137.67 |
+| MICHEAL     | FORMAN       | 102.74 |
+| ENRIQUE     | FORSYTHE     |  96.72 |
+| RAUL        | FORTIER      | 100.80 |
+| HOWARD      | FORTNER      |  93.74 |
+| PHYLLIS     | FOSTER       |  91.77 |
+| JACK        | FOUST        |  89.76 |
+| JO          | FOWLER       |  73.80 |
+| HOLLY       | FOX          | 114.69 |
+| JUAN        | FRALEY       |  73.77 |
+| JOEL        | FRANCISCO    |  95.77 |
+| BETH        | FRANKLIN     | 103.75 |
+| GLENDA      | FRAZIER      | 140.68 |
+| SHANNON     | FREEMAN      | 100.76 |
+| CLAUDIA     | FULLER       | 111.74 |
+| GERALD      | FULTZ        | 121.70 |
+| FELIX       | GAFFNEY      |  73.76 |
+| RANDY       | GAITHER      | 110.72 |
+| CLARENCE    | GAMEZ        | 104.70 |
+| FLOYD       | GANDY        |  69.83 |
+| JAMES       | GANNON       | 131.70 |
+| CAROL       | GARCIA       |  91.78 |
+| DAVE        | GARDINER     | 134.68 |
+| JOANN       | GARDNER      |  66.84 |
+| NELLIE      | GARRETT      |  94.79 |
+| PEARL       | GARZA        |  76.78 |
+| BILL        | GAVIN        | 114.72 |
+| RUBEN       | GEARY        |  89.79 |
+| JOY         | GEORGE       | 124.67 |
+| VICTORIA    | GIBSON       | 111.73 |
+| TANYA       | GILBERT      | 144.67 |
+| DUSTIN      | GILLETTE     | 100.74 |
+| JOE         | GILLILAND    | 138.71 |
+| DENNIS      | GILMAN       | 114.72 |
+| JOSEPHINE   | GOMEZ        | 109.74 |
+| NORMA       | GONZALES     |  79.79 |
+| MARTHA      | GONZALEZ     | 127.66 |
+| ADAM        | GOOCH        | 101.78 |
+| KENNETH     | GOODEN       |  84.83 |
+| LESLIE      | GORDON       |  89.78 |
+| DOUGLAS     | GRAF         | 114.75 |
+| RITA        | GRAHAM       |  92.76 |
+| MICHELE     | GRANT        | 130.70 |
+| BRANDY      | GRAVES       | 122.72 |
+| JUDY        | GRAY         |  96.75 |
+| CHRISTOPHER | GRECO        | 147.69 |
+| VIRGINIA    | GREEN        | 129.68 |
+| JEANETTE    | GREENE       |  74.80 |
+| SONIA       | GREGORY      | 126.72 |
+| ALEX        | GRESHAM      | 151.67 |
+| ROSS        | GREY         |  99.73 |
+| LILLIAN     | GRIFFIN      | 106.75 |
+| THOMAS      | GRIGSBY      | 105.75 |
+| TERRY       | GRISSOM      |  72.80 |
+| ARMANDO     | GRUBER       |  83.79 |
+| HARVEY      | GUAJARDO     |  93.78 |
+| ERIK        | GUILLEN      | 118.71 |
+| TERRENCE    | GUNDERSON    | 117.70 |
+| CARLA       | GUTIERREZ    | 103.74 |
+| RAMONA      | HALE         | 129.70 |
+| JESSICA     | HALL         | 152.66 |
+| GLADYS      | HAMILTON     | 146.69 |
+| SETH        | HANNON       | 112.75 |
+| DELORES     | HANSEN       |  91.79 |
+| VIOLA       | HANSON       | 129.68 |
+| GABRIEL     | HARDER       | 111.74 |
+| BRYAN       | HARDISON     | 124.72 |
+| BRENT       | HARKINS      | 112.77 |
+| ROBERTA     | HARPER       |  84.77 |
+| HELEN       | HARRIS       | 134.68 |
+| WENDY       | HARRISON     |  91.70 |
+| DANA        | HART         | 133.71 |
+| ARLENE      | HARVEY       | 120.74 |
+| COREY       | HAUSER       | 101.78 |
+| ARNOLD      | HAVENS       | 167.67 |
+| JILL        | HAWKINS      |  68.79 |
+| LEE         | HAWKS        | 119.73 |
+| ROBIN       | HAYES        | 102.76 |
+| SHAWN       | HEATON       | 152.67 |
+| ANDREA      | HENDERSON    |  93.78 |
+| ALBERTO     | HENNING      |  66.79 |
+| PAULINE     | HENRY        |  98.73 |
+| ANGELA      | HERNANDEZ    | 140.64 |
+| NORA        | HERRERA      | 118.72 |
+| TRACY       | HERRMANN     | 129.72 |
+| CLAUDE      | HERZOG       | 111.75 |
+| EDUARDO     | HIATT        | 130.73 |
+| MONICA      | HICKS        | 128.70 |
+| MARCUS      | HIDALGO      | 115.70 |
+| ANNA        | HILL         |  91.79 |
+| ZACHARY     | HITE         | 146.69 |
+| MATTIE      | HOFFMAN      |  64.78 |
+| MABEL       | HOLLAND      | 112.70 |
+| PHILLIP     | HOLM         | 101.74 |
+| LUCILLE     | HOLMES       | 108.72 |
+| TONI        | HOLT         |  95.77 |
+| HILDA       | HOPKINS      | 122.71 |
+| BILLIE      | HORTON       |  88.74 |
+| RAY         | HOULE        |  79.78 |
+| ROSE        | HOWARD       | 103.78 |
+| WILLIE      | HOWELL       | 101.74 |
+| MILTON      | HOWLAND      | 127.75 |
+| LAUREN      | HUDSON       |  71.80 |
+| BRANDON     | HUEY         | 152.63 |
+| BONNIE      | HUGHES       |  87.79 |
+| ELEANOR     | HUNT         | 216.54 |
+| CHARLOTTE   | HUNTER       |  93.76 |
+| JEREMY      | HURTADO      | 103.72 |
+| CURTIS      | IRBY         | 167.62 |
+| FREDERICK   | ISBELL       | 105.79 |
+| DANNY       | ISOM         |  91.79 |
+| KAREN       | JACKSON      | 131.73 |
+| GEORGIA     | JACOBS       | 110.74 |
+| KATHY       | JAMES        | 129.70 |
+| LOUISE      | JENKINS      | 101.75 |
+| NAOMI       | JENNINGS     | 152.65 |
+| LENA        | JENSEN       | 168.68 |
+| OLGA        | JIMENEZ      | 144.68 |
+| PATRICIA    | JOHNSON      | 128.73 |
+| KRISTIN     | JOHNSTON     | 116.69 |
+| BARBARA     | JONES        |  81.78 |
+| TIFFANY     | JORDAN       |  59.86 |
+| JERRY       | JORDON       | 143.71 |
+| JOSEPH      | JOY          | 134.70 |
+| CHRISTIAN   | JUNG         |  88.76 |
+| ALAN        | KAHN         | 124.74 |
+| ELSIE       | KELLEY       | 141.63 |
+| DENISE      | KELLY        | 103.73 |
+| RHONDA      | KENNEDY      | 194.61 |
+| JEROME      | KENYON       |  73.84 |
+| LILLIE      | KIM          |  89.77 |
+| REGINALD    | KINDER       | 115.72 |
+| MELISSA     | KING         | 123.66 |
+| GAIL        | KNIGHT       | 109.75 |
+| KELLY       | KNOTT        | 103.75 |
+| CHARLES     | KOWALSKI     | 138.68 |
+| LESTER      | KRAUS        |  65.84 |
+| HERBERT     | KRUGER       |  78.80 |
+| MISTY       | LAMBERT      | 118.73 |
+| JACOB       | LANCE        |  79.79 |
+| RENEE       | LANE         |  97.74 |
+| HEIDI       | LARSON       | 122.66 |
+| DARYL       | LARUE        | 111.73 |
+| LAURIE      | LAWRENCE     |  99.77 |
+| JEANNE      | LAWSON       | 136.73 |
+| LAWRENCE    | LAWTON       | 100.69 |
+| KIMBERLY    | LEE          |  95.75 |
+| LOUIS       | LEONE        | 161.65 |
+| SARAH       | LEWIS        | 119.70 |
+| GEORGE      | LINTON       | 131.67 |
+| MAUREEN     | LITTLE       |  87.79 |
+| DWIGHT      | LOMBARDI     |  74.83 |
+| JACQUELINE  | LONG         | 148.67 |
+| AMY         | LOPEZ        | 127.71 |
+| BARRY       | LOVELACE     | 134.67 |
+| PRISCILLA   | LOWE         | 157.65 |
+| VELMA       | LUCAS        | 117.73 |
+| WILLARD     | LUMPKIN      |  96.78 |
+| LEWIS       | LYMAN        |  86.81 |
+| JACKIE      | LYNCH        |  93.75 |
+| STEVE       | MACKENZIE    | 158.66 |
+| RALPH       | MADRIGAL     | 150.66 |
+| MATTHEW     | MAHAN        | 114.69 |
+| DONALD      | MAHON        |  89.77 |
+| CLIFTON     | MALCOLM      | 117.73 |
+| JOSHUA      | MARK         | 119.70 |
+| WILLIE      | MARKHAM      | 101.75 |
+| SAMUEL      | MARLOW       |  80.79 |
+| SHERRY      | MARSHALL     | 153.66 |
+| CALVIN      | MARTEL       | 111.77 |
+| SANDRA      | MARTIN       | 118.72 |
+| RUTH        | MARTINEZ     | 125.76 |
+| HAROLD      | MARTINO      | 130.68 |
+| JUANITA     | MASON        | 110.70 |
+| ERICA       | MATTHEWS     |  95.78 |
+| RICK        | MATTOX       | 124.73 |
+| GREGORY     | MAULDIN      |  78.77 |
+| GWENDOLYN   | MAY          |  98.75 |
+| ALFREDO     | MCADAMS      |  85.80 |
+| RENE        | MCALISTER    | 113.74 |
+| MORRIS      | MCCARTER     | 139.66 |
+| JESUS       | MCCARTNEY    | 114.76 |
+| VERA        | MCCOY        |  67.82 |
+| RICHARD     | MCCRARY      | 109.75 |
+| BRAD        | MCCURDY      | 105.75 |
+| EDITH       | MCDONALD     |  71.81 |
+| SAM         | MCDUFFIE     | 117.76 |
+| MIRIAM      | MCKINNEY     | 135.74 |
+| RAYMOND     | MCWHORTER    | 135.70 |
+| RICARDO     | MEADOR       |  99.79 |
+| DORA        | MEDINA       | 107.77 |
+| CORY        | MEEHAN       |  81.76 |
+| ANTONIO     | MEEK         |  78.84 |
+| CASEY       | MENA         | 141.66 |
+| PETER       | MENARD       | 106.77 |
+| MARIAN      | MENDOZA      | 107.77 |
+| NATALIE     | MEYER        |  95.77 |
+| JESSIE      | MILAM        | 141.67 |
+| BECKY       | MILES        | 115.71 |
+| SHANE       | MILLARD      |  95.78 |
+| MARIA       | MILLER       | 151.67 |
+| ALICIA      | MILLS        |  83.79 |
+| TOM         | MILNER       | 107.68 |
+| STEPHANIE   | MITCHELL     | 118.75 |
+| RODNEY      | MOELLER      | 104.77 |
+| STACEY      | MONTGOMERY   | 151.66 |
+| MARGARET    | MOORE        |  89.77 |
+| ANITA       | MORALES      |  62.85 |
+| STELLA      | MORENO       | 104.78 |
+| EVELYN      | MORGAN       | 114.72 |
+| CRAIG       | MORRELL      | 124.70 |
+| HEATHER     | MORRIS       | 115.70 |
+| BESSIE      | MORRISON     | 132.72 |
+| JASON       | MORRISSEY    | 128.72 |
+| BRADLEY     | MOTLEY       | 126.73 |
+| CHERYL      | MURPHY       | 133.73 |
+| THELMA      | MURRAY       | 126.68 |
+| MANUEL      | MURRELL      | 116.70 |
+| PEGGY       | MYERS        |  96.76 |
+| PENNY       | NEAL         |  68.82 |
+| DEBRA       | NELSON       | 141.71 |
+| JAIME       | NETTLES      | 126.71 |
+| RANDALL     | NEUMANN      |  99.77 |
+| PATRICK     | NEWSOM       | 119.69 |
+| JUSTIN      | NGO          | 129.64 |
+| TAMARA      | NGUYEN       |  93.75 |
+| SUZANNE     | NICHOLS      |  94.76 |
+| ELMER       | NOE          |  98.74 |
+| JULIO       | NOLAND       |  89.79 |
+| CODY        | NOLEN        |  98.78 |
+| LEONA       | OBRIEN       |  50.86 |
+| MARION      | OCAMPO       | 115.71 |
+| ISAAC       | OGLESBY      | 126.71 |
+| JORGE       | OLIVARES     | 134.66 |
+| ELLA        | OLIVER       | 137.69 |
+| ANNETTE     | OLSON        |  98.76 |
+| DWAYNE      | OLVERA       | 101.78 |
+| SYLVIA      | ORTIZ        | 143.68 |
+| MARC        | OUTLAW       | 123.70 |
+| CARMEN      | OWENS        |  97.74 |
+| DAN         | PAINE        | 109.78 |
+| MEGAN       | PALMER       |  92.73 |
+| FRANCES     | PARKER       | 108.78 |
+| WANDA       | PATTERSON    | 145.70 |
+| LYNN        | PAYNE        | 123.72 |
+| IRMA        | PEARSON      |  70.82 |
+| LANCE       | PEMBERTON    |  82.78 |
+| ERIKA       | PENA         | 101.74 |
+| CAROLYN     | PEREZ        | 117.70 |
+| GERALDINE   | PERKINS      | 112.70 |
+| SARA        | PERRY        | 141.67 |
+| WALTER      | PERRYMAN     | 127.70 |
+| SUE         | PETERS       | 154.60 |
+| NICOLE      | PETERSON     |  94.78 |
+| BOB         | PFEIFFER     |  91.76 |
+| JANET       | PHILLIPS     | 127.73 |
+| SALLY       | PIERCE       | 119.68 |
+| JEFFERY     | PINSON       | 121.69 |
+| MAX         | PITT         | 107.76 |
+| HECTOR      | POINDEXTER   | 119.74 |
+| CARRIE      | PORTER       | 124.66 |
+| BILLY       | POULIN       | 149.65 |
+| ANNE        | POWELL       |  87.77 |
+| DARRELL     | POWER        |  91.75 |
+| KEN         | PREWITT      | 110.71 |
+| IRENE       | PRICE        |  77.77 |
+| GLENN       | PULLEN       |  93.77 |
+| ANDREW      | PURDY        | 109.73 |
+| STEPHEN     | QUALLS       | 118.72 |
+| TROY        | QUIGLEY      | 144.70 |
+| ROGER       | QUINTANILLA  | 146.64 |
+| VINCENT     | RALSTON      | 105.75 |
+| CHRISTINA   | RAMIREZ      |  80.82 |
+| EVA         | RAMOS        |  83.82 |
+| ANDRE       | RAPP         | 126.72 |
+| DALE        | RATCLIFF     | 112.73 |
+| AUDREY      | RAY          | 119.71 |
+| JIM         | REA          | 128.67 |
+| DORIS       | REED         | 100.78 |
+| CONSTANCE   | REID         |  95.75 |
+| NEIL        | RENNER       | 152.68 |
+| DEBBIE      | REYES        | 130.68 |
+| ROSA        | REYNOLDS     | 133.70 |
+| EDGAR       | RHOADS       |  95.75 |
+| SHERRI      | RHODES       | 128.67 |
+| JAMIE       | RICE         | 139.71 |
+| WILMA       | RICHARDS     |  91.80 |
+| ASHLEY      | RICHARDSON   | 112.75 |
+| RONNIE      | RICKETTS     | 100.75 |
+| KEITH       | RICO         |  89.74 |
+| BRITTANY    | RILEY        | 159.72 |
+| MARK        | RINEHART     | 104.74 |
+| KATHERINE   | RIVERA       |  58.86 |
+| JAY         | ROBB         |  89.74 |
+| ERIC        | ROBERT       | 122.73 |
+| CHRISTINE   | ROBERTS      |  99.76 |
+| JOANNE      | ROBERTSON    | 127.66 |
+| GREG        | ROBINS       | 141.70 |
+| SHARON      | ROBINSON     | 115.70 |
+| LAURA       | RODRIGUEZ    | 113.78 |
+| VIOLET      | RODRIQUEZ    | 142.70 |
+| TERESA      | ROGERS       | 128.71 |
+| MINNIE      | ROMERO       | 142.66 |
+| DARLENE     | ROSE         | 113.69 |
+| MARILYN     | ROSS         | 137.70 |
+| TERRANCE    | ROUSH        | 111.71 |
+| DAVID       | ROYAL        | 115.74 |
+| VIVIAN      | RUIZ         |  90.77 |
+| NATHAN      | RUNYON       | 122.68 |
+| ANNIE       | RUSSELL      |  58.82 |
+| TARA        | RYAN         |  88.80 |
+| RYAN        | SALISBURY    | 142.70 |
+| GENE        | SANBORN      |  97.73 |
+| JULIE       | SANCHEZ      | 107.71 |
+| TAMMY       | SANDERS      | 155.59 |
+| WILLIAM     | SATTERFIELD  | 100.74 |
+| DEAN        | SAUER        | 109.73 |
+| JONATHAN    | SCARBOROUGH  |  72.82 |
+| JESSE       | SCHILLING    | 101.74 |
+| ROSEMARY    | SCHMIDT      | 147.65 |
+| LEONARD     | SCHOFIELD    | 109.68 |
+| JIMMY       | SCHRADER     | 105.71 |
+| KEVIN       | SCHULER      | 116.78 |
+| ANTHONY     | SCHWAB       |  71.80 |
+| BRUCE       | SCHWARZ      | 103.77 |
+| REBECCA     | SCOTT        |  89.76 |
+| STANLEY     | SCROGGINS    | 139.70 |
+| KARL        | SEAL         | 221.55 |
+| AARON       | SELBY        | 110.76 |
+| LESLIE      | SEWARD       | 152.65 |
+| EARL        | SHANKS       | 111.73 |
+| CLARA       | SHAW         | 195.58 |
+| RICKY       | SHELBY       |  91.75 |
+| SCOTT       | SHELLEY      |  94.75 |
+| DIANNE      | SHELTON      | 135.69 |
+| WARREN      | SHERROD      | 159.67 |
+| FRANCIS     | SIKES        | 104.74 |
+| MAXINE      | SILVA        | 116.68 |
+| MICHAEL     | SILVERMAN    | 127.71 |
+| TINA        | SIMMONS      | 133.72 |
+| ARTHUR      | SIMPKINS     | 155.68 |
+| ELLEN       | SIMPSON      | 117.72 |
+| VANESSA     | SIMS         |  86.81 |
+| FRANCISCO   | SKIDMORE     |  98.78 |
+| GILBERT     | SLEDGE       | 129.72 |
+| WALLACE     | SLONE        | 109.75 |
+| MARY        | SMITH        | 118.68 |
+| MARION      | SNYDER       | 194.61 |
+| NINA        | SOTO         | 123.71 |
+| ROLAND      | SOUTH        |  80.77 |
+| JEFFREY     | SPEAR        |  90.77 |
+| CATHY       | SPENCER      | 122.71 |
+| KYLE        | SPURLOCK     | 110.70 |
+| SERGIO      | STANFIELD    | 108.74 |
+| ALLISON     | STANLEY      |  92.73 |
+| KIRK        | STCLAIR      |  64.81 |
+| LORRAINE    | STEPHENS     |  86.79 |
+| ERNEST      | STEPP        |  89.75 |
+| ELAINE      | STEVENS      | 107.76 |
+| ALICE       | STEWART      | 138.67 |
+| IAN         | STILL        |  96.73 |
+| VERONICA    | STONE        | 126.68 |
+| DAWN        | SULLIVAN     | 120.74 |
+| FELICIA     | SUTTON       |  86.72 |
+| PERRY       | SWAFFORD     | 117.76 |
+| GLEN        | TALBERT      | 113.74 |
+| TODD        | TAN          | 117.71 |
+| DOROTHY     | TAYLOR       |  99.75 |
+| SALVADOR    | TEEL         | 129.70 |
+| JENNIE      | TERRY        | 133.71 |
+| NANCY       | THOMAS       | 103.72 |
+| DONNA       | THOMPSON     |  98.79 |
+| MARSHALL    | THORN        | 117.77 |
+| LARRY       | THRASHER     | 112.74 |
+| LONNIE      | TIRADO       |  94.82 |
+| CLYDE       | TOBIAS       | 115.71 |
+| EDDIE       | TOMLIN       | 128.73 |
+| KELLY       | TORRES       |  99.78 |
+| PAUL        | TROUT        | 120.77 |
+| FRANKLIN    | TROUTMAN     |  74.78 |
+| WAYNE       | TRUONG       |  70.81 |
+| DUANE       | TUBBS        | 148.69 |
+| MARJORIE    | TUCKER       | 127.68 |
+| MARIE       | TURNER       | 114.74 |
+| JOHNNY      | TURPIN       |  57.81 |
+| ANDY        | VANHORN      | 113.75 |
+| CHRISTY     | VARGAS       | 122.69 |
+| BENJAMIN    | VARNEY       |  95.77 |
+| TERRI       | VASQUEZ      | 126.73 |
+| JULIAN      | VEST         | 109.72 |
+| CECIL       | VINES        | 115.74 |
+| ROBERTO     | VU           | 139.70 |
+| MARGIE      | WADE         | 159.64 |
+| FRANK       | WAGGONER     | 127.68 |
+| DOLORES     | WAGNER       | 114.74 |
+| HUGH        | WALDROP      |  90.79 |
+| DEBORAH     | WALKER       | 115.71 |
+| CONNIE      | WALLACE      | 100.77 |
+| CASSANDRA   | WALTERS      | 129.70 |
+| JANICE      | WARD         | 144.66 |
+| HAZEL       | WARREN       | 110.66 |
+| RUBY        | WASHINGTON   | 110.72 |
+| YVONNE      | WATKINS      |  92.79 |
+| THERESA     | WATSON       |  99.70 |
+| SHELLY      | WATTS        | 113.74 |
+| JAMIE       | WAUGH        | 118.75 |
+| MIKE        | WAY          | 166.65 |
+| YOLANDA     | WEAVER       | 110.73 |
+| ETHEL       | WEBB         | 135.68 |
+| RONALD      | WEINER       | 132.70 |
+| MARLENE     | WELCH        | 117.74 |
+| SHEILA      | WELLS        |  73.82 |
+| EDNA        | WEST         | 107.74 |
+| MITCHELL    | WESTMORELAND | 134.68 |
+| FRED        | WHEAT        |  88.75 |
+| LUCY        | WHEELER      |  91.74 |
+| BETTY       | WHITE        | 117.72 |
+| ROY         | WHITING      | 143.71 |
+| JON         | WILES        |  87.76 |
+| LINDA       | WILLIAMS     | 135.74 |
+| GINA        | WILLIAMSON   | 111.72 |
+| BERNICE     | WILLIS       | 145.67 |
+| SUSAN       | WILSON       |  92.76 |
+| DARREN      | WINDHAM      | 108.76 |
+| VIRGIL      | WOFFORD      | 107.73 |
+| LORI        | WOOD         | 141.69 |
+| FLORENCE    | WOODS        | 126.70 |
+| TYLER       | WREN         |  88.79 |
+| BRENDA      | WRIGHT       | 104.74 |
+| BRIAN       | WYMAN        |  52.88 |
+| LUIS        | YANEZ        |  79.80 |
+| MARVIN      | YEE          |  75.79 |
+| CYNTHIA     | YOUNG        | 111.68 |
++-------------+--------------+--------+
+599 rows in set (0.04 sec)
+
+mysql> show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.00 sec)
+
+mysql> desc rental;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| rental_id    | int                | NO   | PRI | NULL              | auto_increment                                |
+| rental_date  | datetime           | NO   | MUL | NULL              |                                               |
+| inventory_id | mediumint unsigned | NO   | MUL | NULL              |                                               |
+| customer_id  | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| return_date  | datetime           | YES  |     | NULL              |                                               |
+| staff_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from rental
+    -> limit 100;
++-----------+---------------------+--------------+-------------+---------------------+----------+---------------------+
+| rental_id | rental_date         | inventory_id | customer_id | return_date         | staff_id | last_update         |
++-----------+---------------------+--------------+-------------+---------------------+----------+---------------------+
+|         1 | 2005-05-24 22:53:30 |          367 |         130 | 2005-05-26 22:04:30 |        1 | 2006-02-15 21:30:53 |
+|         2 | 2005-05-24 22:54:33 |         1525 |         459 | 2005-05-28 19:40:33 |        1 | 2006-02-15 21:30:53 |
+|         3 | 2005-05-24 23:03:39 |         1711 |         408 | 2005-06-01 22:12:39 |        1 | 2006-02-15 21:30:53 |
+|         4 | 2005-05-24 23:04:41 |         2452 |         333 | 2005-06-03 01:43:41 |        2 | 2006-02-15 21:30:53 |
+|         5 | 2005-05-24 23:05:21 |         2079 |         222 | 2005-06-02 04:33:21 |        1 | 2006-02-15 21:30:53 |
+|         6 | 2005-05-24 23:08:07 |         2792 |         549 | 2005-05-27 01:32:07 |        1 | 2006-02-15 21:30:53 |
+|         7 | 2005-05-24 23:11:53 |         3995 |         269 | 2005-05-29 20:34:53 |        2 | 2006-02-15 21:30:53 |
+|         8 | 2005-05-24 23:31:46 |         2346 |         239 | 2005-05-27 23:33:46 |        2 | 2006-02-15 21:30:53 |
+|         9 | 2005-05-25 00:00:40 |         2580 |         126 | 2005-05-28 00:22:40 |        1 | 2006-02-15 21:30:53 |
+|        10 | 2005-05-25 00:02:21 |         1824 |         399 | 2005-05-31 22:44:21 |        2 | 2006-02-15 21:30:53 |
+|        11 | 2005-05-25 00:09:02 |         4443 |         142 | 2005-06-02 20:56:02 |        2 | 2006-02-15 21:30:53 |
+|        12 | 2005-05-25 00:19:27 |         1584 |         261 | 2005-05-30 05:44:27 |        2 | 2006-02-15 21:30:53 |
+|        13 | 2005-05-25 00:22:55 |         2294 |         334 | 2005-05-30 04:28:55 |        1 | 2006-02-15 21:30:53 |
+|        14 | 2005-05-25 00:31:15 |         2701 |         446 | 2005-05-26 02:56:15 |        1 | 2006-02-15 21:30:53 |
+|        15 | 2005-05-25 00:39:22 |         3049 |         319 | 2005-06-03 03:30:22 |        1 | 2006-02-15 21:30:53 |
+|        16 | 2005-05-25 00:43:11 |          389 |         316 | 2005-05-26 04:42:11 |        2 | 2006-02-15 21:30:53 |
+|        17 | 2005-05-25 01:06:36 |          830 |         575 | 2005-05-27 00:43:36 |        1 | 2006-02-15 21:30:53 |
+|        18 | 2005-05-25 01:10:47 |         3376 |          19 | 2005-05-31 06:35:47 |        2 | 2006-02-15 21:30:53 |
+|        19 | 2005-05-25 01:17:24 |         1941 |         456 | 2005-05-31 06:00:24 |        1 | 2006-02-15 21:30:53 |
+|        20 | 2005-05-25 01:48:41 |         3517 |         185 | 2005-05-27 02:20:41 |        2 | 2006-02-15 21:30:53 |
+|        21 | 2005-05-25 01:59:46 |          146 |         388 | 2005-05-26 01:01:46 |        2 | 2006-02-15 21:30:53 |
+|        22 | 2005-05-25 02:19:23 |          727 |         509 | 2005-05-26 04:52:23 |        2 | 2006-02-15 21:30:53 |
+|        23 | 2005-05-25 02:40:21 |         4441 |         438 | 2005-05-29 06:34:21 |        1 | 2006-02-15 21:30:53 |
+|        24 | 2005-05-25 02:53:02 |         3273 |         350 | 2005-05-27 01:15:02 |        1 | 2006-02-15 21:30:53 |
+|        25 | 2005-05-25 03:21:20 |         3961 |          37 | 2005-05-27 21:25:20 |        2 | 2006-02-15 21:30:53 |
+|        26 | 2005-05-25 03:36:50 |         4371 |         371 | 2005-05-31 00:34:50 |        1 | 2006-02-15 21:30:53 |
+|        27 | 2005-05-25 03:41:50 |         1225 |         301 | 2005-05-30 01:13:50 |        2 | 2006-02-15 21:30:53 |
+|        28 | 2005-05-25 03:42:37 |         4068 |         232 | 2005-05-26 09:26:37 |        2 | 2006-02-15 21:30:53 |
+|        29 | 2005-05-25 03:47:12 |          611 |          44 | 2005-05-30 00:31:12 |        2 | 2006-02-15 21:30:53 |
+|        30 | 2005-05-25 04:01:32 |         3744 |         430 | 2005-05-30 03:12:32 |        1 | 2006-02-15 21:30:53 |
+|        31 | 2005-05-25 04:05:17 |         4482 |         369 | 2005-05-30 07:15:17 |        1 | 2006-02-15 21:30:53 |
+|        32 | 2005-05-25 04:06:21 |         3832 |         230 | 2005-05-25 23:55:21 |        1 | 2006-02-15 21:30:53 |
+|        33 | 2005-05-25 04:18:51 |         1681 |         272 | 2005-05-27 03:58:51 |        1 | 2006-02-15 21:30:53 |
+|        34 | 2005-05-25 04:19:28 |         2613 |         597 | 2005-05-29 00:10:28 |        2 | 2006-02-15 21:30:53 |
+|        35 | 2005-05-25 04:24:36 |         1286 |         484 | 2005-05-27 07:02:36 |        2 | 2006-02-15 21:30:53 |
+|        36 | 2005-05-25 04:36:26 |         1308 |          88 | 2005-05-29 00:31:26 |        1 | 2006-02-15 21:30:53 |
+|        37 | 2005-05-25 04:44:31 |          403 |         535 | 2005-05-29 01:03:31 |        1 | 2006-02-15 21:30:53 |
+|        38 | 2005-05-25 04:47:44 |         2540 |         302 | 2005-06-01 00:58:44 |        1 | 2006-02-15 21:30:53 |
+|        39 | 2005-05-25 04:51:46 |         4466 |         207 | 2005-05-31 03:14:46 |        2 | 2006-02-15 21:30:53 |
+|        40 | 2005-05-25 05:09:04 |         2638 |         413 | 2005-05-27 23:12:04 |        1 | 2006-02-15 21:30:53 |
+|        41 | 2005-05-25 05:12:29 |         1761 |         174 | 2005-06-02 00:28:29 |        1 | 2006-02-15 21:30:53 |
+|        42 | 2005-05-25 05:24:58 |          380 |         523 | 2005-05-31 02:47:58 |        2 | 2006-02-15 21:30:53 |
+|        43 | 2005-05-25 05:39:25 |         2578 |         532 | 2005-05-26 06:54:25 |        2 | 2006-02-15 21:30:53 |
+|        44 | 2005-05-25 05:53:23 |         3098 |         207 | 2005-05-29 10:56:23 |        2 | 2006-02-15 21:30:53 |
+|        45 | 2005-05-25 05:59:39 |         1853 |         436 | 2005-06-02 09:56:39 |        2 | 2006-02-15 21:30:53 |
+|        46 | 2005-05-25 06:04:08 |         3318 |           7 | 2005-06-02 08:18:08 |        2 | 2006-02-15 21:30:53 |
+|        47 | 2005-05-25 06:05:20 |         2211 |          35 | 2005-05-30 03:04:20 |        1 | 2006-02-15 21:30:53 |
+|        48 | 2005-05-25 06:20:46 |         1780 |         282 | 2005-06-02 05:42:46 |        1 | 2006-02-15 21:30:53 |
+|        49 | 2005-05-25 06:39:35 |         2965 |         498 | 2005-05-30 10:12:35 |        2 | 2006-02-15 21:30:53 |
+|        50 | 2005-05-25 06:44:53 |         1983 |          18 | 2005-05-28 11:28:53 |        2 | 2006-02-15 21:30:53 |
+|        51 | 2005-05-25 06:49:10 |         1257 |         256 | 2005-05-26 06:42:10 |        1 | 2006-02-15 21:30:53 |
+|        52 | 2005-05-25 06:51:29 |         4017 |         507 | 2005-05-31 01:27:29 |        2 | 2006-02-15 21:30:53 |
+|        53 | 2005-05-25 07:19:16 |         1255 |         569 | 2005-05-27 05:19:16 |        2 | 2006-02-15 21:30:53 |
+|        54 | 2005-05-25 07:23:25 |         2787 |         291 | 2005-06-01 05:05:25 |        2 | 2006-02-15 21:30:53 |
+|        55 | 2005-05-25 08:26:13 |         1139 |         131 | 2005-05-30 10:57:13 |        1 | 2006-02-15 21:30:53 |
+|        56 | 2005-05-25 08:28:11 |         1352 |         511 | 2005-05-26 14:21:11 |        1 | 2006-02-15 21:30:53 |
+|        57 | 2005-05-25 08:43:32 |         3938 |           6 | 2005-05-29 06:42:32 |        2 | 2006-02-15 21:30:53 |
+|        58 | 2005-05-25 08:53:14 |         3050 |         323 | 2005-05-28 14:40:14 |        1 | 2006-02-15 21:30:53 |
+|        59 | 2005-05-25 08:56:42 |         2884 |         408 | 2005-06-01 09:52:42 |        1 | 2006-02-15 21:30:53 |
+|        60 | 2005-05-25 08:58:25 |          330 |         470 | 2005-05-30 14:14:25 |        1 | 2006-02-15 21:30:53 |
+|        61 | 2005-05-25 09:01:57 |         4210 |         250 | 2005-06-02 07:22:57 |        2 | 2006-02-15 21:30:53 |
+|        62 | 2005-05-25 09:18:52 |          261 |         419 | 2005-05-30 10:55:52 |        1 | 2006-02-15 21:30:53 |
+|        63 | 2005-05-25 09:19:16 |         4008 |         383 | 2005-05-27 04:24:16 |        1 | 2006-02-15 21:30:53 |
+|        64 | 2005-05-25 09:21:29 |           79 |         368 | 2005-06-03 11:31:29 |        1 | 2006-02-15 21:30:53 |
+|        65 | 2005-05-25 09:32:03 |         3552 |         346 | 2005-05-29 14:21:03 |        1 | 2006-02-15 21:30:53 |
+|        66 | 2005-05-25 09:35:12 |         1162 |          86 | 2005-05-29 04:16:12 |        2 | 2006-02-15 21:30:53 |
+|        67 | 2005-05-25 09:41:01 |          239 |         119 | 2005-05-27 13:46:01 |        2 | 2006-02-15 21:30:53 |
+|        68 | 2005-05-25 09:47:31 |         4029 |         120 | 2005-05-31 10:20:31 |        2 | 2006-02-15 21:30:53 |
+|        69 | 2005-05-25 10:10:14 |         3207 |         305 | 2005-05-27 14:02:14 |        2 | 2006-02-15 21:30:53 |
+|        70 | 2005-05-25 10:15:23 |         2168 |          73 | 2005-05-27 05:56:23 |        2 | 2006-02-15 21:30:53 |
+|        71 | 2005-05-25 10:26:39 |         2408 |         100 | 2005-05-28 04:59:39 |        1 | 2006-02-15 21:30:53 |
+|        72 | 2005-05-25 10:52:13 |         2260 |          48 | 2005-05-28 05:52:13 |        2 | 2006-02-15 21:30:53 |
+|        73 | 2005-05-25 11:00:07 |          517 |         391 | 2005-06-01 13:56:07 |        2 | 2006-02-15 21:30:53 |
+|        74 | 2005-05-25 11:09:48 |         1744 |         265 | 2005-05-26 12:23:48 |        2 | 2006-02-15 21:30:53 |
+|        75 | 2005-05-25 11:13:34 |         3393 |         510 | 2005-06-03 12:58:34 |        1 | 2006-02-15 21:30:53 |
+|        76 | 2005-05-25 11:30:37 |         3021 |           1 | 2005-06-03 12:00:37 |        2 | 2006-02-15 21:30:53 |
+|        77 | 2005-05-25 11:31:59 |         1303 |         451 | 2005-05-26 16:53:59 |        2 | 2006-02-15 21:30:53 |
+|        78 | 2005-05-25 11:35:18 |         4067 |         135 | 2005-05-31 12:48:18 |        2 | 2006-02-15 21:30:53 |
+|        79 | 2005-05-25 12:11:07 |         3299 |         245 | 2005-06-03 10:54:07 |        2 | 2006-02-15 21:30:53 |
+|        80 | 2005-05-25 12:12:07 |         2478 |         314 | 2005-05-31 17:46:07 |        2 | 2006-02-15 21:30:53 |
+|        81 | 2005-05-25 12:15:19 |         2610 |         286 | 2005-06-02 14:08:19 |        2 | 2006-02-15 21:30:53 |
+|        82 | 2005-05-25 12:17:46 |         1388 |         427 | 2005-06-01 10:48:46 |        1 | 2006-02-15 21:30:53 |
+|        83 | 2005-05-25 12:30:15 |          466 |         131 | 2005-05-27 15:40:15 |        1 | 2006-02-15 21:30:53 |
+|        84 | 2005-05-25 12:36:30 |         1829 |         492 | 2005-05-29 18:33:30 |        1 | 2006-02-15 21:30:53 |
+|        85 | 2005-05-25 13:05:34 |          470 |         414 | 2005-05-29 16:53:34 |        1 | 2006-02-15 21:30:53 |
+|        86 | 2005-05-25 13:36:12 |         2275 |         266 | 2005-05-30 14:53:12 |        1 | 2006-02-15 21:30:53 |
+|        87 | 2005-05-25 13:52:43 |         1586 |         331 | 2005-05-29 11:12:43 |        2 | 2006-02-15 21:30:53 |
+|        88 | 2005-05-25 14:13:54 |         2221 |          53 | 2005-05-29 09:32:54 |        2 | 2006-02-15 21:30:53 |
+|        89 | 2005-05-25 14:28:29 |         2181 |         499 | 2005-05-29 14:33:29 |        1 | 2006-02-15 21:30:53 |
+|        90 | 2005-05-25 14:31:25 |         2984 |          25 | 2005-06-01 10:07:25 |        1 | 2006-02-15 21:30:53 |
+|        91 | 2005-05-25 14:57:22 |          139 |         267 | 2005-06-01 18:32:22 |        1 | 2006-02-15 21:30:53 |
+|        92 | 2005-05-25 15:38:46 |          775 |         302 | 2005-05-31 13:40:46 |        2 | 2006-02-15 21:30:53 |
+|        93 | 2005-05-25 15:54:16 |         4360 |         288 | 2005-06-03 20:18:16 |        1 | 2006-02-15 21:30:53 |
+|        94 | 2005-05-25 16:03:42 |         1675 |         197 | 2005-05-30 14:23:42 |        1 | 2006-02-15 21:30:53 |
+|        95 | 2005-05-25 16:12:52 |          178 |         400 | 2005-06-02 18:55:52 |        2 | 2006-02-15 21:30:53 |
+|        96 | 2005-05-25 16:32:19 |         3418 |          49 | 2005-05-30 10:47:19 |        2 | 2006-02-15 21:30:53 |
+|        97 | 2005-05-25 16:34:24 |         1283 |         263 | 2005-05-28 12:13:24 |        2 | 2006-02-15 21:30:53 |
+|        98 | 2005-05-25 16:48:24 |         2970 |         269 | 2005-05-27 11:29:24 |        2 | 2006-02-15 21:30:53 |
+|        99 | 2005-05-25 16:50:20 |          535 |          44 | 2005-05-28 18:52:20 |        1 | 2006-02-15 21:30:53 |
+|       100 | 2005-05-25 16:50:28 |         2599 |         208 | 2005-06-02 22:11:28 |        1 | 2006-02-15 21:30:53 |
++-----------+---------------------+--------------+-------------+---------------------+----------+---------------------+
+100 rows in set (0.00 sec)
+
+mysql> desc inventory;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| inventory_id | mediumint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| film_id      | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| store_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> desc rental;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| rental_id    | int                | NO   | PRI | NULL              | auto_increment                                |
+| rental_date  | datetime           | NO   | MUL | NULL              |                                               |
+| inventory_id | mediumint unsigned | NO   | MUL | NULL              |                                               |
+| customer_id  | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| return_date  | datetime           | YES  |     | NULL              |                                               |
+| staff_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.00 sec)
+
+mysql> desc film;
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field                | Type                                                                | Null | Key | Default           | Extra                  |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| film_id              | smallint unsigned                                                   | NO   | PRI | NULL              | auto_increment                  |
+| title                | varchar(128)                                                        | NO   | MUL | NULL              |                  |
+| description          | text                                                                | YES  |     | NULL              |                  |
+| release_year         | year                                                                | YES  |     | NULL              |                  |
+| language_id          | tinyint unsigned                                                    | NO   | MUL | NULL              |                  |
+| original_language_id | tinyint unsigned                                                    | YES  | MUL | NULL              |                  |
+| rental_duration      | tinyint unsigned                                                    | NO   |     | 3                 |                  |
+| rental_rate          | decimal(4,2)                                                        | NO   |     | 4.99              |                  |
+| length               | smallint unsigned                                                   | YES  |     | NULL              |                  |
+| replacement_cost     | decimal(5,2)                                                        | NO   |     | 19.99             |                  |
+| rating               | enum('G','PG','PG-13','R','NC-17')                                  | YES  |     | G                 |                  |
+| special_features     | set('Trailers','Commentaries','Deleted Scenes','Behind the Scenes') | YES  |     | NULL              |                  |
+| last_update          | timestamp                                                           | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on updateCURRENT_TIMESTAMP |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+13 rows in set (0.00 sec)
+
+mysql> desc inventory;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| inventory_id | mediumint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| film_id      | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| store_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT A.FILM_ID, A.TITLE, B.RENTAL_ID, C.INVENTORY_ID
+    -> FROM FILM A
+    -> INNER JOIN INVENTORY C
+    -> ON A.FILM_ID = C.FILM_ID
+    -> INNER JOIN RENTAL B
+    -> ON C.INVENTORY_ID = B.INVENTORY_ID
+    -> GROUP BY FILM_ID, INVENTORY_ID
+    -> LIMIT 100;
+ERROR 1055 (42000): Expression #3 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'sakila.B.rental_id' which is not functionallydependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT A.FILM_ID, A.TITLE, B.RENTAL_ID, C.INVENTORY_ID
+    -> FROM FILM A
+    -> INNER JOIN INVENTORY C
+    -> ON A.FILM_ID = C.FILM_ID
+    -> INNER JOIN RENTAL B
+    -> ON C.INVENTORY_ID = B.INVENTORY_ID
+    -> LIMIT 100;
++---------+------------------+-----------+--------------+
+| FILM_ID | TITLE            | RENTAL_ID | INVENTORY_ID |
++---------+------------------+-----------+--------------+
+|       1 | ACADEMY DINOSAUR |      4863 |            1 |
+|       1 | ACADEMY DINOSAUR |     11433 |            1 |
+|       1 | ACADEMY DINOSAUR |     14714 |            1 |
+|       1 | ACADEMY DINOSAUR |       972 |            2 |
+|       1 | ACADEMY DINOSAUR |      2117 |            2 |
+|       1 | ACADEMY DINOSAUR |      4187 |            2 |
+|       1 | ACADEMY DINOSAUR |      9449 |            2 |
+|       1 | ACADEMY DINOSAUR |     15453 |            2 |
+|       1 | ACADEMY DINOSAUR |     10126 |            3 |
+|       1 | ACADEMY DINOSAUR |     15421 |            3 |
+|       1 | ACADEMY DINOSAUR |     10883 |            4 |
+|       1 | ACADEMY DINOSAUR |     14624 |            4 |
+|       1 | ACADEMY DINOSAUR |       361 |            6 |
+|       1 | ACADEMY DINOSAUR |      3201 |            6 |
+|       1 | ACADEMY DINOSAUR |      4390 |            6 |
+|       1 | ACADEMY DINOSAUR |      7168 |            6 |
+|       1 | ACADEMY DINOSAUR |     14098 |            6 |
+|       1 | ACADEMY DINOSAUR |      1210 |            7 |
+|       1 | ACADEMY DINOSAUR |      5766 |            7 |
+|       1 | ACADEMY DINOSAUR |      8510 |            7 |
+|       1 | ACADEMY DINOSAUR |     14798 |            7 |
+|       1 | ACADEMY DINOSAUR |     10141 |            8 |
+|       1 | ACADEMY DINOSAUR |     12651 |            8 |
+|       2 | ACE GOLDFINGER   |     10310 |            9 |
+|       2 | ACE GOLDFINGER   |     13421 |            9 |
+|       2 | ACE GOLDFINGER   |      4364 |           10 |
+|       2 | ACE GOLDFINGER   |      7733 |           10 |
+|       2 | ACE GOLDFINGER   |     15218 |           10 |
+|       2 | ACE GOLDFINGER   |     10992 |           11 |
+|       2 | ACE GOLDFINGER   |     11758 |           11 |
+|       3 | ADAPTATION HOLES |      6999 |           12 |
+|       3 | ADAPTATION HOLES |     14882 |           12 |
+|       3 | ADAPTATION HOLES |     11306 |           13 |
+|       3 | ADAPTATION HOLES |     15788 |           13 |
+|       3 | ADAPTATION HOLES |      1033 |           14 |
+|       3 | ADAPTATION HOLES |      1427 |           14 |
+|       3 | ADAPTATION HOLES |      3897 |           14 |
+|       3 | ADAPTATION HOLES |     10437 |           14 |
+|       3 | ADAPTATION HOLES |     11845 |           14 |
+|       3 | ADAPTATION HOLES |      3956 |           15 |
+|       3 | ADAPTATION HOLES |      7586 |           15 |
+|       3 | ADAPTATION HOLES |     12727 |           15 |
+|       4 | AFFAIR PREJUDICE |      6493 |           16 |
+|       4 | AFFAIR PREJUDICE |      8931 |           16 |
+|       4 | AFFAIR PREJUDICE |     15352 |           16 |
+|       4 | AFFAIR PREJUDICE |       995 |           17 |
+|       4 | AFFAIR PREJUDICE |      2090 |           17 |
+|       4 | AFFAIR PREJUDICE |      5682 |           17 |
+|       4 | AFFAIR PREJUDICE |      6970 |           17 |
+|       4 | AFFAIR PREJUDICE |     11714 |           17 |
+|       4 | AFFAIR PREJUDICE |      8331 |           18 |
+|       4 | AFFAIR PREJUDICE |     15199 |           18 |
+|       4 | AFFAIR PREJUDICE |      3506 |           19 |
+|       4 | AFFAIR PREJUDICE |      9863 |           19 |
+|       4 | AFFAIR PREJUDICE |     15174 |           19 |
+|       4 | AFFAIR PREJUDICE |       465 |           20 |
+|       4 | AFFAIR PREJUDICE |      1716 |           20 |
+|       4 | AFFAIR PREJUDICE |      4789 |           20 |
+|       4 | AFFAIR PREJUDICE |     12726 |           20 |
+|       4 | AFFAIR PREJUDICE |      6348 |           21 |
+|       4 | AFFAIR PREJUDICE |      9359 |           21 |
+|       4 | AFFAIR PREJUDICE |     15542 |           21 |
+|       4 | AFFAIR PREJUDICE |      4802 |           22 |
+|       4 | AFFAIR PREJUDICE |      8002 |           22 |
+|       4 | AFFAIR PREJUDICE |     13943 |           22 |
+|       5 | AFRICAN EGG      |       552 |           23 |
+|       5 | AFRICAN EGG      |      1614 |           23 |
+|       5 | AFRICAN EGG      |      6615 |           23 |
+|       5 | AFRICAN EGG      |     11129 |           23 |
+|       5 | AFRICAN EGG      |     12926 |           23 |
+|       5 | AFRICAN EGG      |      2255 |           24 |
+|       5 | AFRICAN EGG      |      5362 |           24 |
+|       5 | AFRICAN EGG      |      7793 |           24 |
+|       5 | AFRICAN EGG      |     13043 |           24 |
+|       5 | AFRICAN EGG      |      5030 |           25 |
+|       5 | AFRICAN EGG      |      9851 |           25 |
+|       5 | AFRICAN EGG      |     15458 |           25 |
+|       6 | AGENT TRUMAN     |       317 |           26 |
+|       6 | AGENT TRUMAN     |      3391 |           26 |
+|       6 | AGENT TRUMAN     |      4594 |           26 |
+|       6 | AGENT TRUMAN     |      8353 |           26 |
+|       6 | AGENT TRUMAN     |     12764 |           26 |
+|       6 | AGENT TRUMAN     |      2965 |           27 |
+|       6 | AGENT TRUMAN     |      3567 |           27 |
+|       6 | AGENT TRUMAN     |     10526 |           27 |
+|       6 | AGENT TRUMAN     |     11944 |           27 |
+|       6 | AGENT TRUMAN     |      8263 |           28 |
+|       6 | AGENT TRUMAN     |     13796 |           28 |
+|       6 | AGENT TRUMAN     |      5806 |           29 |
+|       6 | AGENT TRUMAN     |     10485 |           29 |
+|       6 | AGENT TRUMAN     |     12513 |           29 |
+|       6 | AGENT TRUMAN     |       259 |           30 |
+|       6 | AGENT TRUMAN     |      2569 |           30 |
+|       6 | AGENT TRUMAN     |      3756 |           30 |
+|       6 | AGENT TRUMAN     |      7810 |           30 |
+|       6 | AGENT TRUMAN     |     12463 |           30 |
+|       6 | AGENT TRUMAN     |     11261 |           31 |
+|       6 | AGENT TRUMAN     |     14554 |           31 |
+|       7 | AIRPLANE SIERRA  |     11084 |           32 |
+|       7 | AIRPLANE SIERRA  |     14942 |           32 |
++---------+------------------+-----------+--------------+
+100 rows in set (0.00 sec)
+
+mysql> SELECT A.FILM_ID, A.TITLE
+    -> FROM FILM A
+    -> LEFT JOIN INVENTORY C
+    -> ON C.FILM_ID = A.FILM_ID
+    -> LEFT JOIN RENTAL B
+    -> ON B.INVENTORY_ID = C.INVENTORY_ID
+    -> GROUP BY A.FILM_ID, A.TITLE
+    -> HAVING COUNT(B.RENTAL_ID) = 0;
++---------+------------------------+
+| FILM_ID | TITLE                  |
++---------+------------------------+
+|      14 | ALICE FANTASIA         |
+|      33 | APOLLO TEEN            |
+|      36 | ARGONAUTS TOWN         |
+|      38 | ARK RIDGEMONT          |
+|      41 | ARSENIC INDEPENDENCE   |
+|      87 | BOONDOCK BALLROOM      |
+|     108 | BUTCH PANTHER          |
+|     128 | CATCH AMISTAD          |
+|     144 | CHINATOWN GLADIATOR    |
+|     148 | CHOCOLATE DUCK         |
+|     171 | COMMANDMENTS EXPRESS   |
+|     192 | CROSSING DIVORCE       |
+|     195 | CROWDS TELEMARK        |
+|     198 | CRYSTAL BREAKING       |
+|     217 | DAZED PUNK             |
+|     221 | DELIVERANCE MULHOLLAND |
+|     318 | FIREHOUSE VIETNAM      |
+|     325 | FLOATS GARDEN          |
+|     332 | FRANKENSTEIN STRANGER  |
+|     359 | GLADIATOR WESTWARD     |
+|     386 | GUMP DATE              |
+|     404 | HATE HANDICAP          |
+|     419 | HOCUS FRIDA            |
+|     495 | KENTUCKIAN GIANT       |
+|     497 | KILL BROTHERHOOD       |
+|     607 | MUPPET MILE            |
+|     642 | ORDER BETRAYED         |
+|     669 | PEARL DESTINY          |
+|     671 | PERDITION FARGO        |
+|     701 | PSYCHO SHRUNK          |
+|     712 | RAIDERS ANTITRUST      |
+|     713 | RAINBOW SHOCK          |
+|     742 | ROOF CHAMPION          |
+|     801 | SISTER FREDDY          |
+|     802 | SKY MIRACLE            |
+|     860 | SUICIDES SILENCE       |
+|     874 | TADPOLE PARK           |
+|     909 | TREASURE COMMAND       |
+|     943 | VILLAIN DESPERATE      |
+|     950 | VOLUME HOUSE           |
+|     954 | WAKE JAWS              |
+|     955 | WALLS ARTIST           |
++---------+------------------------+
+42 rows in set (0.04 sec)
+
+mysql>
