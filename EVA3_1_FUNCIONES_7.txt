@@ -1,0 +1,139 @@
+Microsoft Windows [Versión 10.0.22621.4317]
+(c) Microsoft Corporation. Todos los derechos reservados.
+
+C:\Users\bryan>cd "C:\Program Files\MySQL\MySQL Shell 8.0\bin"
+
+C:\Program Files\MySQL\MySQL Shell 8.0\bin>mysqlsh
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 23
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > create tbd3;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tbd3' at line 1
+ MySQL  localhost:3306 ssl  SQL > create database tbd3;
+Query OK, 1 row affected (0.0080 sec)
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| credit_cards       |
+| human_resources    |
+| information_schema |
+| mysql              |
+| performance_schema |
+| prueba             |
+| sakila             |
+| sys                |
+| tbd3               |
+| world              |
++--------------------+
+10 rows in set (0.0019 sec)
+ MySQL  localhost:3306 ssl  SQL > use tbd3;
+Default schema set to `tbd3`.
+Fetching global names, object names from `tbd3` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd3  SQL > select mensaje;
+ERROR: 1054 (42S22): Unknown column 'mensaje' in 'field list'
+ MySQL  localhost:3306 ssl  tbd3  SQL > select mensaje();
++-------------+
+| mensaje()   |
++-------------+
+| Hola mundo! |
++-------------+
+1 row in set (0.0031 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select mostrarMensaje("Bryan");
++-------------------------+
+| mostrarMensaje("Bryan") |
++-------------------------+
+| Aloha!Bryan             |
++-------------------------+
+1 row in set (0.0014 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select sumar(540,69);
++---------------+
+| sumar(540,69) |
++---------------+
+|           609 |
++---------------+
+1 row in set (0.0016 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > create table datos(
+                                     -> valor1 int,
+                                     -> valor2 int);
+Query OK, 0 rows affected (0.0272 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > insert into datos
+                                     -> values(5,3), (8,4), (20,32), (89,90), (-12,-9);
+Query OK, 5 rows affected (0.0057 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd3  SQL > select * from datos;
++--------+--------+
+| valor1 | valor2 |
++--------+--------+
+|      5 |      3 |
+|      8 |      4 |
+|     20 |     32 |
+|     89 |     90 |
+|    -12 |     -9 |
++--------+--------+
+5 rows in set (0.0010 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select valor1, valor2, sumar(valor1, valor2)
+                                     -> from datos;
++--------+--------+-----------------------+
+| valor1 | valor2 | sumar(valor1, valor2) |
++--------+--------+-----------------------+
+|      5 |      3 |                     8 |
+|      8 |      4 |                    12 |
+|     20 |     32 |                    52 |
+|     89 |     90 |                   179 |
+|    -12 |     -9 |                   -21 |
++--------+--------+-----------------------+
+5 rows in set (0.0011 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select valor1, valor2, sumar2(valor1, valor2) from datos;
++--------+--------+------------------------+
+| valor1 | valor2 | sumar2(valor1, valor2) |
++--------+--------+------------------------+
+|      5 |      3 |                      8 |
+|      8 |      4 |                     12 |
+|     20 |     32 |                     52 |
+|     89 |     90 |                    179 |
+|    -12 |     -9 |                    -21 |
++--------+--------+------------------------+
+5 rows in set (0.0020 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select comparar(5,3);
++---------------------------+
+| comparar(5,3)             |
++---------------------------+
+| Valor 2 MAYOR que valor 1 |
++---------------------------+
+1 row in set (0.0015 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select comparar(5,5);
++---------------------------+
+| comparar(5,5)             |
++---------------------------+
+| Ambos valores son IGUALES |
++---------------------------+
+1 row in set (0.0008 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select comparar(1,5);
++---------------------------+
+| comparar(1,5)             |
++---------------------------+
+| Valor 2 MAYOR que Valor 1 |
++---------------------------+
+1 row in set (0.0007 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select comparar(1,5);
++---------------------------+
+| comparar(1,5)             |
++---------------------------+
+| Valor 2 MAYOR que Valor 1 |
++---------------------------+
+1 row in set (0.0016 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL >
