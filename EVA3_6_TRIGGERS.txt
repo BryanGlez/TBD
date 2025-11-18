@@ -1,0 +1,128 @@
+MySQL Shell 8.0.44
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 20
+Server version: 8.0.44 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > use tbd3;
+Default schema set to `tbd3`.
+Fetching global names, object names from `tbd3` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd3  SQL > show tables;
++----------------+
+| Tables_in_tbd3 |
++----------------+
+| actor          |
+| datos          |
+| personas       |
+| prueba         |
++----------------+
+4 rows in set (0.0024 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > desc personas;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| rfc        | varchar(10) | NO   | PRI | NULL    |       |
+| nombre     | varchar(50) | NO   |     | NULL    |       |
+| ap_paterno | varchar(50) | NO   |     | NULL    |       |
+| ap_materno | varchar(50) | YES  |     | NULL    |       |
+| fecha_nac  | date        | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+5 rows in set (0.0413 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select * from personas;
+Empty set (0.0586 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > insert into personas
+                                     -> value("SDF356","Bryan","Gonzalez","Gonzalez","2001-07-18");
+Query OK, 1 row affected (0.0446 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > insert into personas  value("SDF355","Bryan","Gonzalez","Gonzalez","2001-07-18");
+Query OK, 1 row affected (0.0435 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select @mensaje;
++----------------------------+
+| @mensaje                   |
++----------------------------+
+| Persona agregada con exito |
++----------------------------+
+1 row in set (0.0006 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > create table bitacora(
+                                     -> descripcion varchar(50));
+Query OK, 0 rows affected (0.0785 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select * from personas;
++--------+----------+------------+------------+------------+
+| rfc    | nombre   | ap_paterno | ap_materno | fecha_nac  |
++--------+----------+------------+------------+------------+
+| SDF355 | Bryan    | Gonzalez   | Gonzalez   | 2001-07-18 |
+| SDF356 | Bryan    | Gonzalez   | Gonzalez   | 2001-07-18 |
++--------+----------+------------+------------+------------+
+2 rows in set (0.0014 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select * from bitacora;
+Empty set (0.0020 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > delete from personas
+                                     -> where rfc = "SDF355";
+Query OK, 1 row affected (0.0439 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select * from bitacora;
++--------------------+
+| descripcion        |
++--------------------+
+| Borrado de persona |
++--------------------+
+1 row in set (0.0008 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > delete from personas where rfc = "SDF355";
+Query OK, 0 rows affected (0.0013 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select * from bitacora;
++--------------------+
+| descripcion        |
++--------------------+
+| Borrado de persona |
+| Borrado: SDF355    |
++--------------------+
+1 row in set (0.0010 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > desc personas;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| rfc        | varchar(10) | NO   | PRI | NULL    |       |
+| nombre     | varchar(50) | NO   |     | NULL    |       |
+| ap_paterno | varchar(50) | NO   |     | NULL    |       |
+| ap_materno | varchar(50) | YES  |     | NULL    |       |
+| fecha_nac  | date        | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+5 rows in set (0.0025 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > insert into personas(nombre, ap_paterno, ap_materno, fecha_nac) values ("Bryan","Gonzalez","Gonzalez","2001-07-18");
+Query OK, 1 row affected (0.0237 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > desc personas;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| rfc        | varchar(10) | NO   | PRI | NULL    |       |
+| nombre     | varchar(50) | NO   |     | NULL    |       |
+| ap_paterno | varchar(50) | NO   |     | NULL    |       |
+| ap_materno | varchar(50) | YES  |     | NULL    |       |
+| fecha_nac  | date        | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+5 rows in set (0.0471 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select * from personas;
++------------+----------+------------+------------+------------+
+| rfc        | nombre   | ap_paterno | ap_materno | fecha_nac  |
++------------+----------+------------+------------+------------+
+| SDF356     | Bryan | Gonzalez     | Gonzalez   | 2001-07-18 |
+| TEBM031002 | Bryan | Gonzalez     | Gonzalez   | 2001-07-18 |
++------------+----------+------------+------------+------------+
+2 rows in set (0.0015 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL >
+ MySQL  localhost:3306 ssl  tbd3  SQL > select * from bitacora;
++--------------------+
+| descripcion        |
++--------------------+
+| Borrado de persona |
+| Borrado: SDF355    |
++--------------------+
+1 row in set (0.0020 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL >
