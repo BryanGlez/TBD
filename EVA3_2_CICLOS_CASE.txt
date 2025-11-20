@@ -1,0 +1,75 @@
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 50
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > use tbd3;
+Default schema set to `tbd3`.
+Fetching global names, object names from `tbd3` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd3  SQL > select dia_semana(5);
++---------------+
+| dia_semana(5) |
++---------------+
+| Jueves        |
++---------------+
+1 row in set (0.0056 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select dia_semana(11);
++----------------+
+| dia_semana(11) |
++----------------+
+| NO VÁLIDO      |
++----------------+
+1 row in set (0.0005 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select calificacion(90);
++------------------+
+| calificacion(90) |
++------------------+
+| A                |
++------------------+
+1 row in set (0.0012 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select calificacion(70);
++------------------+
+| calificacion(70) |
++------------------+
+| C                |
++------------------+
+1 row in set (0.0005 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select calificacion(50);
++------------------+
+| calificacion(50) |
++------------------+
+| F                |
++------------------+
+1 row in set (0.0004 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select sumatoria_loop(5);
++-------------------+
+| sumatoria_loop(5) |
++-------------------+
+|                15 |
++-------------------+
+1 row in set (0.0011 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select sumatoria_while(5);
++--------------------+
+| sumatoria_while(5) |
++--------------------+
+|                 15 |
++--------------------+
+1 row in set (0.0053 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL > select sumatoria_repeat(5);
++---------------------+
+| sumatoria_repeat(5) |
++---------------------+
+|                  15 |
++---------------------+
+1 row in set (0.0008 sec)
+ MySQL  localhost:3306 ssl  tbd3  SQL >
